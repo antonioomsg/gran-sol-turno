@@ -75,7 +75,7 @@
   .pchip.me{background:var(--ink);color:var(--bg)}
   .pcount{font-size:11px;font-weight:700;color:var(--ink-soft);align-self:center}
 
-  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
   .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
   .kpi .lab{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
   .kpi .val{font-size:23px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
@@ -257,7 +257,6 @@
     <div class="toolbar">
       <div class="seg" id="scenario" role="group" aria-label="Escenario de ventas"></div>
       <label class="toggle"><input type="checkbox" id="noct" checked> Plus nocturnidad</label>
-      <button class="btn ghost sm" id="loadPreset">Plantilla de Carlos</button>
       <button class="btn sm" id="export">Exportar a Excel</button>
       <button class="btn ghost sm" id="theme" aria-label="Cambiar tema">◐</button>
     </div>
@@ -334,32 +333,6 @@
       <div class="bd"><div class="week" id="week"></div></div>
     </section>
   </div>
-
-  <section class="card verdict">
-    <div class="hd"><h2>Veredicto del simulacro</h2><span class="muted">Se recalcula al vuelo</span></div>
-    <div class="bd">
-      <div class="vhead">
-        <div class="vstate" id="vstate">—</div>
-        <div class="stars" id="vstars"></div>
-        <div class="vscore muted" id="vscore"></div>
-      </div>
-      <div class="msg" id="msgCeo"><div class="who">CEO · Gran Sol</div><p id="msgCeoTxt"></p></div>
-      <div class="msg" id="msgCfo" style="border-color:var(--ok)"><div class="who" style="color:var(--ok)">CFO · Finanzas</div><p id="msgCfoTxt"></p></div>
-      <div class="warns" id="warns"></div>
-    </div>
-  </section>
-
-  <details class="adv">
-    <summary><span>Nivel avanzado — Subrogación de la plantilla heredada (art. 44 ET)</span><span class="muted">CHRO</span></summary>
-    <div class="bd">
-      <p>El Gran Sol es un traspaso de negocio en marcha. En una sucesión de empresa <b>heredas la plantilla completa con su antigüedad</b>: no eliges a quién contratar ni puedes resetear salarios. En un bar de ~30 años, uno o dos trabajadores pueden arrastrar 20-30 años de antigüedad, lo que dispara la <b>indemnización latente por despido</b>.</p>
-      <h4>Coste de prescindir de un trabajador heredado</h4>
-      <p><code>indemnización = días/año × antigüedad × (salario bruto anual / 365)</code> — 45 días/año por el tramo anterior a 2012 y 33 días/año por el tramo posterior (tope 24 mensualidades). Un camarero histórico con 28 años y ~1.900 € brutos/mes puede arrastrar una <b>mochila de 40.000-55.000 €</b> <span class="muted">[ESTIMADO CHRO]</span>.</p>
-      <h4>Due diligence antes de firmar</h4>
-      <p>Pedir siempre: contratos vigentes y pluses ad personam · nóminas 12 meses + TC1/TC2 · informe de vida laboral de la empresa (antigüedades reales) · certificado de estar al corriente con Seguridad Social y AEAT · registro de jornada y horas extra no pagadas · actas de Inspección y litigios abiertos.</p>
-      <p style="margin-top:8px"><b>Aprendizaje:</b> el 30-35 % de personal sobre ventas del modelo es el coste <i>operativo</i> en régimen normal. La subrogación mete además un <b>pasivo de balance</b> (indemnizaciones + deudas heredadas) que ese porcentaje no ve.</p>
-    </div>
-  </details>
 
   <p class="foot">Horario por defecto tomado de <b>La Castela</b> (Doctor Castelo 22, Madrid): abierto de lunes a sábado, mediodía y noche hasta las 00:30, domingos cerrado. Salen <b>128 h de servicio a la semana</b>. Las franjas de <b>preparación</b> (restaurante cerrado, plantilla trabajando) suman horas y coste pero no cuentan como servicio al cliente. Puedes editar qué abre cada día y sus horas, fijar las horas de cada persona por turno y su coste, y guardar/compartir escenarios en la sala común. Simulacro sobre el modelo de negocio del Gran Sol (coste-hora 12,57 € con SS, encargado + chef 5.068 €/mes, objetivo 30-35 % de personal sobre ventas). Diseñado con los agentes CEO, CFO y CHRO. Los umbrales de coste y la nocturnidad son estimaciones de trabajo, no cifras cerradas: ajústalos con la gestoría. Un buen resultado de plantilla no equivale a caja asegurada: el traspaso y la financiación del proyecto siguen vivos.</p>
 </div>
@@ -528,8 +501,7 @@
       kpi("Coste de personal",eur(c.personal),"al mes")+
       kpi("% sobre ventas",(c.personal?c.pct.toFixed(1):"—")+" %",'<span class="pill '+c.sem+'">'+semLab+'</span> · '+SCEN[state.scenario].lab)+
       kpi("Cobertura",Math.round(c.cobertura*100)+" %","del servicio ("+totalSvcH()+" h)")+
-      kpi("EBITDA estimado",eur(c.ebitda),"al mes")+
-      kpi("Puntuación",c.score+"/100",'<span class="stars">'+"★".repeat(c.stars)+"☆".repeat(5-c.stars)+"</span>");
+      kpi("EBITDA estimado",eur(c.ebitda),"al mes");
     $("#progH").textContent=Math.round(c.cobertura*totalSvcH()*10)/10;
     $("#reqH").textContent=totalSvcH();
     $("#prepH").textContent=c.prepH;
@@ -603,17 +575,6 @@
       wk.appendChild(col);
     });
 
-    var vd=verdict(c);
-    var vs=$("#vstate");vs.textContent=vd.t;vs.style.color="var(--"+(vd.cls==="muted"?"ink-soft":vd.cls)+")";
-    $("#vstars").innerHTML=state.workers.length?("★".repeat(c.stars)+"☆".repeat(5-c.stars)):"";
-    $("#vscore").textContent=state.workers.length?("Puntuación "+c.score+"/100 · fijos "+c.fijoH+" h + por horas "+c.varH+" h/sem"):"";
-    $("#msgCeoTxt").textContent=state.workers.length?ceoMsg(c):"Aún no has contratado a nadie. Empieza por el encargado y el chef, o carga la plantilla de Carlos.";
-    $("#msgCfoTxt").textContent=state.workers.length?cfoMsg(c):"Sin plantilla no hay números que mirar.";
-    $("#msgCfo").style.borderColor= c.sem==="bad"?"var(--bad)":c.sem==="warn"?"var(--warn)":"var(--ok)";
-    $("#msgCfo").querySelector(".who").style.color= c.sem==="bad"?"var(--bad)":c.sem==="warn"?"var(--warn)":"var(--ok)";
-
-    var wn=warnings(),wc2=$("#warns");wc2.innerHTML="";
-    wn.forEach(function(x){var e=document.createElement("div");e.className="warn-item"+(x.hard?" hard":"");e.innerHTML=x.t;wc2.appendChild(e);});
     scheduleSync();
   }
   function renderEditor(){
@@ -860,7 +821,6 @@
   $("#addW").addEventListener("click",function(){var n=$("#wn").value.trim();if(!n){$("#wn").focus();return;}
     var id=addWorker(n,$("#wc").value,$("#wj").value);$("#wn").value="";state.brush=id;render();$("#wn").focus();});
   $("#wn").addEventListener("keydown",function(e){if(e.key==="Enter")$("#addW").click();});
-  $("#loadPreset").addEventListener("click",loadPreset);
   $("#export").addEventListener("click",exportCSV);
   $("#scenSel").addEventListener("change",function(){selectScenario(this.value);});
   $("#scenNew").addEventListener("click",function(){var n=prompt("Nombre del escenario nuevo:","Escenario "+(scenarios.length+1));if(n)newScenario(n,false);});
