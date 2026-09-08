@@ -198,6 +198,26 @@
   .rcur{position:fixed;transform:translate(-2px,-2px);transition:left .07s linear,top .07s linear;will-change:left,top}
   .rcur svg{display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
   .rcur .lbl{position:absolute;left:15px;top:13px;font-size:11px;font-weight:700;color:#fff;padding:1px 7px;border-radius:20px;white-space:nowrap}
+  /* móvil */
+  @media(max-width:600px){
+    .wrap{padding:14px 12px 60px}
+    header.top{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:12px}
+    .brand h1{font-size:34px}
+    .brand .tag{font-size:13.5px}
+    .toolbar{width:100%}
+    .toolbar .seg{flex:1 1 auto}
+    .scenbar{gap:6px;padding:9px 10px}
+    .scenbar select{flex:1 1 140px;min-width:120px}
+    .scenbar .btn.sm{flex:0 0 auto}
+    .presence{margin-left:0;width:100%;margin-top:4px}
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .kpi .val{font-size:20px}
+    .week{grid-template-columns:repeat(2,1fr)}
+    .schedbands{grid-template-columns:repeat(2,1fr)}
+    .schedrow{grid-template-columns:44px 1fr}
+    .grid2{gap:14px}
+    .gatebox{padding:18px}
+  }
 </style>
 
 <div id="cursors"></div>
@@ -632,15 +652,17 @@
   var myColor=colorFor(clientId);
   function knownNames(){var set={};scenarios.forEach(function(s){if(s.creado_por)set[s.creado_por]=1;if(s.actualizado_por)set[s.actualizado_por]=1;});if(myName)delete set[myName];return Object.keys(set);}
   function showGate(cb){var g=$("#gate");if(!g){cb();return;}
-    var chips=$("#gateChips");chips.innerHTML="";
-    var inp=$("#gateInput");inp.value="";
-    function finish(n){n=(n||inp.value||"").trim().slice(0,24);if(!n){inp.focus();return;}
+    var chips=$("#gateChips"),inp=$("#gateInput");inp.value="";
+    function finish(n){n=(n||inp.value||"").trim().slice(0,24);if(!n)n="Invitado";
       myName=n;localStorage.setItem("gs_name",myName);myColor=colorFor(clientId);
-      var nb=$("#nameBtn");if(nb)nb.textContent="👤 "+myName;g.hidden=true;cb();}
-    knownNames().forEach(function(n){var b=document.createElement("button");b.type="button";b.textContent=n;b.addEventListener("click",function(){finish(n);});chips.appendChild(b);});
+      var nb=$("#nameBtn");if(nb)nb.textContent="👤 "+myName;g.hidden=true;
+      try{cb();}catch(e){render();}}
+    function buildChips(list){chips.innerHTML="";list.forEach(function(n){if(!n)return;var b=document.createElement("button");b.type="button";b.textContent=n;b.addEventListener("click",function(){finish(n);});chips.appendChild(b);});}
+    buildChips(knownNames());
+    if(sb){ sb.from("gransol_escenarios").select("creado_por,actualizado_por").then(function(res){ if(res&&res.data){var set={};res.data.forEach(function(r){if(r.creado_por)set[r.creado_por]=1;if(r.actualizado_por)set[r.actualizado_por]=1;});buildChips(Object.keys(set));} }); }
     $("#gateGo").onclick=function(){finish();};
     inp.onkeydown=function(e){if(e.key==="Enter")finish();};
-    g.hidden=false;setTimeout(function(){inp.focus();},60);
+    g.hidden=false;setTimeout(function(){try{inp.focus();}catch(e){}},60);
   }
   function renderCursors(){var box=$("#cursors");if(!box)return;var now=Date.now();
     Object.keys(cursors).forEach(function(id){var c=cursors[id];if(now-c.t>6000){delete cursors[id];var old=box.querySelector('[data-id="'+id+'"]');if(old)old.remove();return;}
@@ -815,21 +837,21 @@
   }
 
   // ---- Boot ----
-  ensureName();
   loadPreset(); // pinta algo mientras conecta
-  if(sb){
+  function afterName(){
+    if(!sb){ setStatus("sin conexión (modo local)"); render(); return; }
     setStatus("conectando…");
     fetchScenarios().then(function(){
-      function proceed(){
-        var want=(new URLSearchParams(location.search)).get("scn")||localStorage.getItem("gs_active");
+      subscribeList();
+      var want=(new URLSearchParams(location.search)).get("scn")||localStorage.getItem("gs_active");
+      try{
         if(want&&scenarios.some(function(s){return s.id===want;})) selectScenario(want);
         else if(scenarios.length) selectScenario(scenarios[0].id);
         else newScenario("Escenario base",true);
-      }
-      subscribeList();
-      if(myName){ $("#nameBtn").textContent="👤 "+myName; myColor=colorFor(clientId); proceed(); }
-      else showGate(proceed);
+      }catch(e){ render(); }
     });
-  } else { ensureName(); setStatus("sin conexión (modo local)"); }
+  }
+  if(myName){ $("#nameBtn").textContent="👤 "+myName; myColor=colorFor(clientId); afterName(); }
+  else showGate(afterName);
 })();
 </script>
