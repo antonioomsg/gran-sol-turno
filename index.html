@@ -186,6 +186,7 @@
 
   /* portada de nombre */
   .gate{position:fixed;inset:0;background:rgba(20,15,8,.55);backdrop-filter:blur(4px);z-index:80;display:flex;align-items:center;justify-content:center;padding:20px}
+  .gate[hidden]{display:none!important}
   .gatebox{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);max-width:420px;width:100%;padding:22px}
   .gatetitle{font-size:20px;font-weight:850;text-transform:uppercase;letter-spacing:-.01em;color:var(--accent)}
   .gatep{font-size:13px;color:var(--ink-soft);margin:6px 0 14px}
@@ -655,14 +656,14 @@
     var chips=$("#gateChips"),inp=$("#gateInput");inp.value="";
     function finish(n){n=(n||inp.value||"").trim().slice(0,24);if(!n)n="Invitado";
       myName=n;localStorage.setItem("gs_name",myName);myColor=colorFor(clientId);
-      var nb=$("#nameBtn");if(nb)nb.textContent="👤 "+myName;g.hidden=true;
+      var nb=$("#nameBtn");if(nb)nb.textContent="👤 "+myName;g.hidden=true;g.style.display="none";
       try{cb();}catch(e){render();}}
     function buildChips(list){chips.innerHTML="";list.forEach(function(n){if(!n)return;var b=document.createElement("button");b.type="button";b.textContent=n;b.addEventListener("click",function(){finish(n);});chips.appendChild(b);});}
     buildChips(knownNames());
     if(sb){ sb.from("gransol_escenarios").select("creado_por,actualizado_por").then(function(res){ if(res&&res.data){var set={};res.data.forEach(function(r){if(r.creado_por)set[r.creado_por]=1;if(r.actualizado_por)set[r.actualizado_por]=1;});buildChips(Object.keys(set));} }); }
     $("#gateGo").onclick=function(){finish();};
     inp.onkeydown=function(e){if(e.key==="Enter")finish();};
-    g.hidden=false;setTimeout(function(){try{inp.focus();}catch(e){}},60);
+    g.hidden=false;g.style.display="flex";setTimeout(function(){try{inp.focus();}catch(e){}},60);
   }
   function renderCursors(){var box=$("#cursors");if(!box)return;var now=Date.now();
     Object.keys(cursors).forEach(function(id){var c=cursors[id];if(now-c.t>6000){delete cursors[id];var old=box.querySelector('[data-id="'+id+'"]');if(old)old.remove();return;}
