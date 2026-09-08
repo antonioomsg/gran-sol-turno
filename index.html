@@ -1,3 +1,11 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gran Sol · Monta el Turno</title>
+</head>
+<body>
 <style>
   :root{
     --bg:#F5F0E6; --panel:#FBF7EF; --panel-2:#F0E9DA; --ink:#241C13; --ink-soft:#5E5140;
@@ -46,16 +54,24 @@
   input:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
   .tnum{font-variant-numeric:tabular-nums;font-family:var(--mono)}
 
-  /* header */
   header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;
-    padding-bottom:14px;border-bottom:2px solid var(--ink);margin-bottom:18px}
+    padding-bottom:14px;border-bottom:2px solid var(--ink);margin-bottom:14px}
   .brand h1{font-size:clamp(30px,5vw,46px);font-weight:850;letter-spacing:-.02em;text-transform:uppercase;line-height:.95}
   .brand h1 span{color:var(--accent)}
   .brand .tag{margin-top:8px;max-width:46ch;color:var(--ink-soft);font-size:14.5px}
   .brand .loc{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
   .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-  /* KPI bar */
+  /* barra de escenarios (sala compartida) */
+  .scenbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px;margin-bottom:18px;box-shadow:var(--shadow)}
+  .scenbar .scenlab{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .scenbar select{width:auto;min-width:180px;font-weight:600}
+  .savestatus{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:80px}
+  .presence{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+  .pchip{font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:20px;padding:2px 9px}
+  .pchip.me{background:var(--ink);color:var(--bg)}
+
   .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
   .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
   .kpi .lab{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
@@ -72,16 +88,14 @@
   .card>.hd h2{font-size:14px;text-transform:uppercase;letter-spacing:.05em}
   .card>.bd{padding:14px 16px}
 
-  /* roster */
   .field{margin-bottom:9px}
   .field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:4px;font-weight:600}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
   .worker{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:7px;
     background:var(--panel-2);transition:border-color .12s,box-shadow .12s}
   .worker.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
-  .worker .dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:12px;color:#fff}
+  .worker .dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:12px;color:#fff;cursor:pointer}
   .worker .meta{flex:1;min-width:0}
-  .worker .nm{font-weight:650;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .worker .rl{font-size:11.5px;color:var(--ink-soft)}
   .worker .hrs{font-size:12px;font-family:var(--mono);text-align:right}
   .worker .hrs b{font-size:13px}
@@ -89,8 +103,14 @@
   .worker .x:hover{background:var(--bad-bg);color:var(--bad)}
   .whint{font-size:12px;color:var(--ink-soft);margin:2px 0 12px}
   .whint.act{color:var(--accent);font-weight:600}
+  .nmi{font-weight:650;font-size:14px;border:1px solid transparent;background:transparent;color:var(--ink);border-radius:6px;padding:2px 5px;width:100%;font-family:inherit}
+  .nmi:hover{border-color:var(--line)} .nmi:focus{border-color:var(--accent);background:var(--panel);outline:none}
+  .ci{display:inline-flex;align-items:center;gap:2px;font-size:11px;color:var(--ink-soft)}
+  .cin{width:52px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:5px;padding:1px 3px;
+    font-size:11px;text-align:right;font-family:var(--mono);-moz-appearance:textfield;appearance:textfield}
+  .cin::-webkit-inner-spin-button,.cin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .cin:focus{outline:1px solid var(--accent);border-color:var(--accent)}
 
-  /* parrilla */
   .week{display:grid;grid-template-columns:repeat(7,1fr);gap:9px}
   @media(max-width:900px){.week{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
   .day{background:var(--panel-2);border:1px solid var(--line);border-radius:11px;padding:8px 8px 9px;min-height:60px}
@@ -103,17 +123,24 @@
   .slot.peak{background:linear-gradient(0deg,var(--accent-soft),transparent 70%)}
   .slot .sh{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--ink-soft);margin-bottom:5px}
   .slot .sh .fr{font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.03em}
-  .slot .cnt{font-family:var(--mono);font-weight:700}
+  .slot .cnt{font-family:var(--mono);font-weight:700;font-size:9.5px}
   .slot .cnt.ok{color:var(--ok)} .slot .cnt.no{color:var(--bad)}
   .peakflag{font-size:8.5px;background:var(--accent);color:var(--accent-ink);border-radius:4px;padding:1px 4px;font-weight:800;letter-spacing:.04em}
   .chips{display:flex;flex-wrap:wrap;gap:4px;min-height:22px}
   .chip{font-size:11px;padding:2px 6px;border-radius:6px;color:#fff;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:4px}
-  .chip .cx{opacity:.7;font-weight:800} .chip:hover .cx{opacity:1}
+  .chip .hin{width:38px;border:none;background:rgba(255,255,255,.28);color:#fff;border-radius:4px;padding:1px 2px;font-size:10px;
+    text-align:center;font-family:var(--mono);-moz-appearance:textfield;appearance:textfield}
+  .chip .hin::-webkit-inner-spin-button,.chip .hin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .chip .hin:focus{outline:1px solid #fff}
+  .chip .cx{opacity:.75;font-weight:800;cursor:pointer;padding:0 1px} .chip:hover .cx,.chip .cx:hover{opacity:1}
+  .slot .tlab{font-size:9px;width:100%;text-align:right;flex-basis:100%;margin-top:1px}
   .slot .add{font-size:10.5px;color:var(--accent);font-weight:700;margin-top:4px;display:none}
   .slot.armed .add{display:block}
   .slot.armed{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+  .slot.prep{background:repeating-linear-gradient(45deg,var(--panel),var(--panel) 6px,var(--panel-2) 6px,var(--panel-2) 12px)}
+  .slot.prep .fr{color:var(--ink-soft)}
+  .slot.prep.full{border-color:var(--line);border-style:dashed}
 
-  /* verdict */
   .verdict{margin-top:20px}
   .vhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .vstate{font-size:22px;font-weight:850;text-transform:uppercase;letter-spacing:-.01em}
@@ -137,71 +164,89 @@
   .seg button.on{background:var(--accent);color:var(--accent-ink)}
   .toggle{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);cursor:pointer;user-select:none}
   .toggle input{width:auto}
-  /* nombre editable en la plantilla */
-  .nmi{font-weight:650;font-size:14px;border:1px solid transparent;background:transparent;color:var(--ink);border-radius:6px;padding:2px 5px;width:100%;font-family:inherit}
-  .nmi:hover{border-color:var(--line)} .nmi:focus{border-color:var(--accent);background:var(--panel);outline:none}
-  .worker .dot{cursor:pointer}
-  /* coste editable en la plantilla */
-  .ci{display:inline-flex;align-items:center;gap:2px;font-size:11px;color:var(--ink-soft)}
-  .cin{width:52px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:5px;padding:1px 3px;
-    font-size:11px;text-align:right;font-family:var(--mono);-moz-appearance:textfield;appearance:textfield}
-  .cin::-webkit-inner-spin-button,.cin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-  .cin:focus{outline:1px solid var(--accent);border-color:var(--accent)}
-  /* campo de horas dentro del chip */
-  .chip .hin{width:38px;border:none;background:rgba(255,255,255,.28);color:#fff;border-radius:4px;padding:1px 2px;font-size:10px;
-    text-align:center;font-family:var(--mono);-moz-appearance:textfield;appearance:textfield}
-  .chip .hin::-webkit-inner-spin-button,.chip .hin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-  .chip .hin:focus{outline:1px solid #fff}
-  .chip .cx{opacity:.75;font-weight:800;cursor:pointer;padding:0 1px} .chip:hover .cx,.chip .cx:hover{opacity:1}
-  .slot .tlab{font-size:9px;width:100%;text-align:right;flex-basis:100%;margin-top:1px}
-  .slot .cnt{font-size:9.5px}
-  /* franja de preparación (restaurante cerrado) */
-  .slot.prep{background:repeating-linear-gradient(45deg,var(--panel),var(--panel) 6px,var(--panel-2) 6px,var(--panel-2) 12px)}
-  .slot.prep .fr{color:var(--ink-soft)}
-  .slot.prep.full{border-color:var(--line);border-style:dashed}
-  /* editor de apertura */
+
   details.adv.sched{margin-top:0;margin-bottom:20px}
   .schednote{margin:0 0 12px;font-size:12.5px;color:var(--ink-soft)}
-  .schedgrid{display:flex;flex-direction:column;gap:7px}
+  .schedgrid{display:flex;flex-direction:column;gap:8px}
   .schedrow{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center}
   .schedday{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
   .schedbands{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
   @media(max-width:640px){.schedbands{grid-template-columns:repeat(2,1fr)}}
-  .bandtog{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:6px 9px;border:1px solid var(--line);
-    border-radius:8px;background:var(--panel-2);color:var(--ink-soft);text-align:left;transition:all .12s}
-  .bandtog small{font-size:9.5px;font-family:var(--mono);opacity:.8}
-  .bandtog span{font-size:12px;font-weight:650}
-  .bandtog.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-  .bandtog.on.prep{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
-  .bandtog:not(.on){opacity:.6} .bandtog:hover{opacity:1;border-color:var(--accent)}
+  .bandcell{border:1px solid var(--line);border-radius:8px;padding:5px 6px;background:var(--panel-2);opacity:.6;transition:all .12s}
+  .bandcell.on{opacity:1}
+  .bandcell:hover{border-color:var(--accent)}
+  .bandtog2{display:flex;flex-direction:column;align-items:flex-start;gap:0;width:100%;text-align:left;padding:1px 2px}
+  .bandtog2 span{font-size:11.5px;font-weight:700;color:var(--ink)}
+  .bandcell.on .bandtog2 span{color:var(--accent)}
+  .bandtog2 small{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}
+  .tw{display:flex;align-items:center;gap:3px;margin-top:4px}
+  .tin{width:100%;padding:2px 3px;font-size:10.5px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);font-family:var(--mono)}
+  .tsep{color:var(--ink-soft);font-size:10px}
+
+  /* portada de nombre */
+  .gate{position:fixed;inset:0;background:rgba(20,15,8,.55);backdrop-filter:blur(4px);z-index:80;display:flex;align-items:center;justify-content:center;padding:20px}
+  .gatebox{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);max-width:420px;width:100%;padding:22px}
+  .gatetitle{font-size:20px;font-weight:850;text-transform:uppercase;letter-spacing:-.01em;color:var(--accent)}
+  .gatep{font-size:13px;color:var(--ink-soft);margin:6px 0 14px}
+  .gatechips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .gatechips button{font-size:12.5px;font-weight:650;border:1px solid var(--line);border-radius:20px;padding:4px 11px;background:var(--panel-2);color:var(--ink)}
+  .gatechips button:hover{border-color:var(--accent);color:var(--accent)}
+  #gateInput{margin-bottom:10px}
+  /* cursores en vivo */
+  #cursors{position:fixed;inset:0;pointer-events:none;z-index:60}
+  .rcur{position:fixed;transform:translate(-2px,-2px);transition:left .07s linear,top .07s linear;will-change:left,top}
+  .rcur svg{display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+  .rcur .lbl{position:absolute;left:15px;top:13px;font-size:11px;font-weight:700;color:#fff;padding:1px 7px;border-radius:20px;white-space:nowrap}
 </style>
+
+<div id="cursors"></div>
+<div id="gate" class="gate" hidden>
+  <div class="gatebox">
+    <div class="gatetitle">Entra a la sala del Gran Sol</div>
+    <p class="gatep">Escribe tu nombre o elige uno ya usado. Así los demás ven tu cursor con tu nombre y quién crea cada escenario.</p>
+    <div class="gatechips" id="gateChips"></div>
+    <input id="gateInput" placeholder="Tu nombre" autocomplete="off" maxlength="24">
+    <button class="btn" id="gateGo" style="width:100%">Entrar a la sala</button>
+  </div>
+</div>
 
 <div class="wrap">
   <header class="top">
     <div class="brand">
       <div class="loc">Cervecería Gran Sol · Ríos Rosas 10, Madrid</div>
       <h1>Monta el <span>Turno</span></h1>
-      <p class="tag">El bar abre igual. La pregunta es quién está detrás de la barra. Crea la plantilla, reparte la semana y cuadra el servicio sin que las nóminas se coman el margen.</p>
+      <p class="tag">Sala compartida en vivo. Crea escenarios, reparte la semana y cuadra el servicio sin que las nóminas se coman el margen. Lo que toque uno, lo veis todos.</p>
     </div>
     <div class="toolbar">
       <div class="seg" id="scenario" role="group" aria-label="Escenario de ventas"></div>
       <label class="toggle"><input type="checkbox" id="noct" checked> Plus nocturnidad</label>
       <button class="btn ghost sm" id="loadPreset">Plantilla de Carlos</button>
       <button class="btn sm" id="export">Exportar a Excel</button>
-      <button class="btn ghost sm" id="reset">Vaciar</button>
       <button class="btn ghost sm" id="theme" aria-label="Cambiar tema">◐</button>
     </div>
   </header>
 
+  <div class="scenbar">
+    <span class="scenlab">Escenario</span>
+    <select id="scenSel" aria-label="Escenario activo"></select>
+    <button class="btn ghost sm" id="scenNew">+ Nuevo</button>
+    <button class="btn ghost sm" id="scenDup">Duplicar</button>
+    <button class="btn ghost sm" id="scenRen">Renombrar</button>
+    <button class="btn ghost sm" id="scenDel">Borrar</button>
+    <button class="btn ghost sm" id="scenShare">Compartir enlace</button>
+    <span class="savestatus" id="saveStatus">conectando…</span>
+    <span class="presence" id="presence"></span>
+    <button class="btn ghost sm" id="nameBtn">yo</button>
+  </div>
+
   <div class="kpis" id="kpis"></div>
 
   <details class="adv sched" id="schedWrap">
-    <summary><span>Editar apertura — qué abre cada día</span><span class="muted" id="schedSummary"></span></summary>
-    <div class="bd"><p class="schednote">Pincha cada franja para abrirla o cerrarla. Puedes abrir o cerrar mediodía, noche y las dos preparaciones (restaurante cerrado, plantilla trabajando) en cualquier día, incluido el domingo.</p><div class="schedgrid" id="schedBody"></div></div>
+    <summary><span>Editar apertura y horas — qué abre cada día</span><span class="muted" id="schedSummary"></span></summary>
+    <div class="bd"><p class="schednote">Pincha el nombre de cada franja para abrirla o cerrarla, y edita las horas de entrada/salida. Puedes tocar mediodía, noche y las dos preparaciones (restaurante cerrado, plantilla trabajando) en cualquier día, incluido el domingo.</p><div class="schedgrid" id="schedBody"></div></div>
   </details>
 
   <div class="grid2">
-    <!-- ROSTER -->
     <section class="card">
       <div class="hd"><h2>Plantilla</h2><span class="muted tnum" id="headcount">0</span></div>
       <div class="bd">
@@ -219,19 +264,15 @@
       </div>
     </section>
 
-    <!-- PARRILLA -->
     <section class="card">
       <div class="hd">
         <h2>Parrilla semanal de turnos</h2>
         <span class="muted tnum"><span id="progH">0</span> / <span id="reqH">128</span> h servicio · <span id="prepH">0</span> h prep</span>
       </div>
-      <div class="bd">
-        <div class="week" id="week"></div>
-      </div>
+      <div class="bd"><div class="week" id="week"></div></div>
     </section>
   </div>
 
-  <!-- VERDICT -->
   <section class="card verdict">
     <div class="hd"><h2>Veredicto del simulacro</h2><span class="muted">Se recalcula al vuelo</span></div>
     <div class="bd">
@@ -258,15 +299,18 @@
     </div>
   </details>
 
-  <p class="foot">Horario por defecto tomado de <b>La Castela</b> (Doctor Castelo 22, Madrid): abierto de lunes a sábado, mediodía y noche hasta las 00:30, domingos cerrado. Salen <b>128 h de servicio a la semana</b>. Las franjas de <b>preparación</b> (restaurante cerrado, plantilla trabajando) suman horas y coste pero no cuentan como servicio al cliente. En cada turno puedes fijar las horas de cada persona y editar su coste, y en el panel «Editar apertura» decides qué abre cada día (mediodía, noche y las dos preparaciones), incluido abrir el domingo. Simulacro construido sobre el documento <b>«Gran Sol CARLOS AJUSTADO.xlsx»</b> (coste-hora 12,57 € con SS, encargado + chef 5.068 €/mes, objetivo 30-35 % de personal sobre ventas). Diseñado con los agentes CEO, CFO y CHRO del Gran Sol. Los umbrales de coste y la nocturnidad son estimaciones de trabajo, no cifras cerradas: ajústalos con la gestoría. Un buen resultado de plantilla no equivale a caja asegurada — el traspaso (70.000 €) y la deuda de Estrella Galicia (77.800 €) siguen vivos.</p>
+  <p class="foot">Horario por defecto tomado de <b>La Castela</b> (Doctor Castelo 22, Madrid): abierto de lunes a sábado, mediodía y noche hasta las 00:30, domingos cerrado. Salen <b>128 h de servicio a la semana</b>. Las franjas de <b>preparación</b> (restaurante cerrado, plantilla trabajando) suman horas y coste pero no cuentan como servicio al cliente. Puedes editar qué abre cada día y sus horas, fijar las horas de cada persona por turno y su coste, y guardar/compartir escenarios en la sala común. Simulacro sobre el modelo de negocio del Gran Sol (coste-hora 12,57 € con SS, encargado + chef 5.068 €/mes, objetivo 30-35 % de personal sobre ventas). Diseñado con los agentes CEO, CFO y CHRO. Los umbrales de coste y la nocturnidad son estimaciones de trabajo, no cifras cerradas: ajústalos con la gestoría. Un buen resultado de plantilla no equivale a caja asegurada: el traspaso y la financiación del proyecto siguen vivos.</p>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
   "use strict";
   var SEM_M = 52/12;
+  var SB_URL="https://vcuqbhyqcmqgcrzcztxp.supabase.co";
+  var SB_KEY="sb_publishable_CeAw6JtqimwU7eCx539S_g_8UbyCsg5";
+  var sb=null; try{ sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){}
 
-  // ---- Categorías del convenio (CHRO) ----
   var CATS = {
     encargado:{lab:"Encargado / Resp. sala", monthly:2534, rate:16.90, color:"#B5651D"},
     jefe_cocina:{lab:"Jefe de cocina / Chef", monthly:2534, rate:16.90, color:"#8C4A1E"},
@@ -277,70 +321,49 @@
     extra:{lab:"Extra / por horas", monthly:0, rate:12.57, color:"#9A7B3A"}
   };
 
-  // ---- Franjas y turnos (CEO + modelo Carlos) ----
   var DAYS=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
-  // Catálogo completo de franjas por día (editable: qué abre cada día, incl. preparaciones y domingo).
-  // Base = horario La Castela. st/en en horas decimales (00:30 = 24.5). noct = horas en 22:00-00:30.
-  // prep:true = restaurante cerrado pero plantilla trabajando.
   var DAYID=["lun","mar","mie","jue","vie","sab","dom"];
   var SHIFTS=[];
   DAYS.forEach(function(dn,di){
     var wknd=(di===4||di===5), sun=(di===6);
     var mdEn=wknd?17.5:17, mdH=Math.round((mdEn-12.5)*10)/10;
     var mdNeed=(di<=3)?1:2, noNeed=(di<=3)?3:(sun?2:4), id=DAYID[di];
-    SHIFTS.push({id:id+"_pre",di:di,fr:"Preparación",h:2,st:10.5,en:12.5,need:1,noct:0,prep:true});
-    SHIFTS.push({id:id+"_md",di:di,fr:"Mediodía",h:mdH,st:12.5,en:mdEn,need:mdNeed,noct:0});
-    SHIFTS.push({id:id+"_ent",di:di,fr:"Preparación",h:Math.round((20-mdEn)*10)/10,st:mdEn,en:20,need:1,noct:0,prep:true});
-    SHIFTS.push({id:id+"_no",di:di,fr:"Noche",h:4.5,st:20,en:24.5,need:noNeed,noct:2.5,peak:wknd});
+    SHIFTS.push({id:id+"_pre",di:di,fr:"Preparación",h:2,st:10.5,en:12.5,need:1,prep:true});
+    SHIFTS.push({id:id+"_md",di:di,fr:"Mediodía",h:mdH,st:12.5,en:mdEn,need:mdNeed});
+    SHIFTS.push({id:id+"_ent",di:di,fr:"Preparación",h:Math.round((20-mdEn)*10)/10,st:mdEn,en:20,need:1,prep:true});
+    SHIFTS.push({id:id+"_no",di:di,fr:"Noche",h:4.5,st:20,en:24.5,need:noNeed,peak:wknd});
   });
   var SVC=SHIFTS.filter(function(s){return !s.prep;});
   var DEFT={}; SHIFTS.forEach(function(s){DEFT[s.id]={st:s.st,en:s.en,h:s.h};});
   function noctOf(st,en){return Math.max(0,Math.min(en,30)-Math.max(st,22));} // horas en 22:00-06:00
   function applyTimes(){SHIFTS.forEach(function(s){var d=DEFT[s.id],t=state.times&&state.times[s.id];
-    s.st=t?t.st:d.st; s.en=t?t.en:d.en; s.h=Math.round((s.en-s.st)*10)/10;});}
+    s.st=t?t.st:d.st; s.en=t?t.en:d.en; s.h=Math.round((s.en-s.st)*10)/10;
+    if(state.assign&&state.assign[s.id])state.assign[s.id].forEach(function(e){if(e.h>s.h)e.h=s.h;});});}
   var SHIFT=function(id){for(var i=0;i<SHIFTS.length;i++)if(SHIFTS[i].id===id)return SHIFTS[i];};
 
-  // ---- Escenarios de ventas (CFO) ----
   var SCEN={bajo:{lab:"Bajo",v:15574},base:{lab:"Base",v:28013},alto:{lab:"Alto",v:44125}};
   var OPEX=5220, MARGEN=0.687;
 
-  // ---- Estado ----
-  var state={workers:[], assign:{}, open:{}, scenario:"base", noct:true, brush:null, seq:1};
-  // apertura por defecto: servicio de lunes a sábado; preparaciones y domingo cerrados (se abren desde el editor)
+  var state={workers:[], assign:{}, open:{}, times:{}, scenario:"base", noct:true, brush:null, seq:1, scenarioId:null};
   SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});
   function active(s){return state.open[s.id]===true;}
   function totalSvcH(){var t=0;SVC.forEach(function(s){if(active(s))t+=s.need*s.h;});return t;}
 
-  // ---- Persistencia ligera ----
-  var STORE="gs_turno_castela"; // clave propia: aislada de versiones anteriores
-  try{var saved=localStorage.getItem(STORE);if(saved){var o=JSON.parse(saved);
-    if(o&&o.workers&&o.v===4){state.workers=o.workers;state.scenario=o.scenario||"base";
-      state.noct=o.noct!==false;state.seq=o.seq||(o.workers.length+1);
-      // sanea la parrilla y la apertura contra los turnos actuales (ignora IDs/entradas inválidas)
-      SHIFTS.forEach(function(s){var prev=(o.assign&&o.assign[s.id])||[];
-        state.assign[s.id]=prev.filter(function(e){return e&&o.workers.some(function(w){return w.id===e.w;});})
-          .map(function(e){return {w:e.w,h:Math.max(0.5,Math.min(s.h,e.h||s.h))};});
-        if(o.open&&typeof o.open[s.id]==="boolean")state.open[s.id]=o.open[s.id];});
-    }}}catch(e){}
-  function save(){try{localStorage.setItem(STORE,JSON.stringify(
-    {v:4,workers:state.workers,assign:state.assign,open:state.open,scenario:state.scenario,noct:state.noct,seq:state.seq}));}catch(e){}}
-
   var $=function(s){return document.querySelector(s);};
   var eur=function(n){return Math.round(n).toLocaleString("es-ES")+" €";};
   var fmt=function(x){var t=x>=24?x-24:x;var hp=Math.floor(t);var m=Math.round((t-hp)*60);return (hp<10?"0":"")+hp+":"+(m<10?"0":"")+m;};
+  var hm=function(v){if(!/^\d\d?:\d\d$/.test(v))return null;var p=v.split(":");return (+p[0])+(+p[1])/60;};
   var initials=function(n){var p=n.trim().split(/\s+/);return ((p[0]||"?")[0]+(p[1]?p[1][0]:"")).toUpperCase();};
 
-  // ---- Helpers del modelo de asignación {w:id, h:horas} ----
   function entry(sid,wid){var a=state.assign[sid];for(var i=0;i<a.length;i++)if(a[i].w===wid)return a[i];return null;}
   function slotHours(sid){var t=0;state.assign[sid].forEach(function(e){t+=e.h;});return t;}
 
-  // ---- Cálculo por trabajador ----
   function workerHours(w){
     var wk=0,no=0,prep=0,days={};
     SHIFTS.forEach(function(s){
       if(!active(s))return;
       var e=entry(s.id,w.id); if(!e)return;
-      wk+=e.h; no+=(s.noct/s.h)*e.h; days[s.di]=true; if(s.prep)prep+=e.h;
+      wk+=e.h; no+=(noctOf(s.st,s.en)/s.h)*e.h; days[s.di]=true; if(s.prep)prep+=e.h;
     });
     return {week:Math.round(wk*10)/10,noct:Math.round(no*10)/10,prep:Math.round(prep*10)/10,days:Object.keys(days).length};
   }
@@ -348,38 +371,28 @@
   function wMonthly(w){return w.monthly!=null?w.monthly:CATS[w.cat].monthly;}
   function workerCost(w){
     var h=workerHours(w);
-    if(w.jornada==="FIJO_COMPLETO") return wMonthly(w); // fijo: coste-empresa fijo mensual (editable)
-    var rate=wRate(w);
-    var base=h.week*rate;
-    var extra=state.noct?h.noct*rate*0.25:0;
+    if(w.jornada==="FIJO_COMPLETO") return wMonthly(w);
+    var rate=wRate(w); var base=h.week*rate; var extra=state.noct?h.noct*rate*0.25:0;
     return (base+extra)*SEM_M;
   }
 
-  // ---- Cálculo global ----
   function compute(){
     var personal=0, progH=0, coveredNeedH=0, prepH=0, fijoH=0, varH=0;
     state.workers.forEach(function(w){personal+=workerCost(w);});
     SHIFTS.forEach(function(s){
       if(!active(s))return;
-      var asg=slotHours(s.id);
-      progH+=asg;
-      if(s.prep){ prepH+=asg; }
-      else { coveredNeedH+=Math.min(asg,s.need*s.h); }
-      state.assign[s.id].forEach(function(e){
-        var w=getW(e.w); if(!w)return;
-        if(w.jornada==="FIJO_COMPLETO")fijoH+=e.h; else varH+=e.h;
-      });
+      var asg=slotHours(s.id); progH+=asg;
+      if(s.prep){ prepH+=asg; } else { coveredNeedH+=Math.min(asg,s.need*s.h); }
+      state.assign[s.id].forEach(function(e){var w=getW(e.w); if(!w)return;
+        if(w.jornada==="FIJO_COMPLETO")fijoH+=e.h; else varH+=e.h;});
     });
-    progH=Math.round(progH*10)/10; prepH=Math.round(prepH*10)/10;
-    fijoH=Math.round(fijoH*10)/10; varH=Math.round(varH*10)/10;
+    progH=Math.round(progH*10)/10; prepH=Math.round(prepH*10)/10; fijoH=Math.round(fijoH*10)/10; varH=Math.round(varH*10)/10;
     var v=SCEN[state.scenario].v;
     var pct= personal>0? personal/v*100 : 0;
     var ebitda= v*MARGEN - personal - OPEX;
     var tot=totalSvcH();
     var cobertura= tot>0? coveredNeedH/tot : 0;
-    // semáforo CFO
     var sem= pct<=35?"ok":(pct<=42?"warn":"bad");
-    // score CFO
     var cov= cobertura<1? 50*cobertura : 50;
     var eff;
     if(pct<=30)eff=50; else if(pct<=35)eff=50-(pct-30)/5*10;
@@ -393,24 +406,18 @@
   }
   function getW(id){for(var i=0;i<state.workers.length;i++)if(state.workers[i].id===id)return state.workers[i];}
 
-  // ---- Reglas laborales (CHRO) ----
   function warnings(){
     var out=[];
-    // cobertura de servicio por franja (en horas-persona)
     SVC.forEach(function(s){
       if(!active(s))return;
       var asg=slotHours(s.id), req=s.need*s.h;
-      if(asg<req-0.01){
-        var falta=Math.round((req-asg)*10)/10;
-        out.push({hard:!!s.peak,t:"<b>"+DAYS[s.di]+" · "+s.fr+"</b>: faltan "+falta+" h de servicio ("+state.assign[s.id].length+"/"+s.need+" personas)"+(s.peak?" — es el PICO":"")});
-      }
+      if(asg<req-0.01){var falta=Math.round((req-asg)*10)/10;
+        out.push({hard:!!s.peak,t:"<b>"+DAYS[s.di]+" · "+s.fr+"</b>: faltan "+falta+" h de servicio ("+state.assign[s.id].length+"/"+s.need+" personas)"+(s.peak?" — es el PICO":"")});}
     });
-    // por trabajador
     state.workers.forEach(function(w){
       var h=workerHours(w);
       if(h.week>40) out.push({hard:true,t:"<b>"+w.name+"</b> tiene "+h.week+" h/semana (máx. 40 h de convenio)"});
       if(h.days>6) out.push({hard:false,t:"<b>"+w.name+"</b> trabaja "+h.days+" días seguidos (máx. 6)"});
-      // descanso 12h entre turnos consecutivos
       var mine=[];
       SHIFTS.forEach(function(s){if(active(s)&&entry(s.id,w.id))mine.push({a:s.di*24+s.st,b:s.di*24+s.en});});
       mine.sort(function(x,y){return x.a-y.a;});
@@ -420,9 +427,8 @@
     return out;
   }
 
-  // ---- Mensajes CEO / CFO ----
   function svcShort(s){return slotHours(s.id) < s.need*s.h - 0.01;}
-  function ceoMsg(c,warn){
+  function ceoMsg(c){
     var pico=false,uncovered=0;
     SVC.forEach(function(s){if(!active(s))return;if(svcShort(s)){uncovered++;if(s.peak)pico=true;}});
     if(pico) return "Con esta parrilla el finde por la noche revienta: sala llena y sin manos para sacarla. Ahí está la caja de la semana. Móntalo otra vez, que este es mi dinero y el de Antonio.";
@@ -435,10 +441,10 @@
     var p=c.pct.toFixed(0);
     if(c.cobertura<1){var falta=Math.round(totalSvcH()*(1-c.cobertura)*10)/10;
       return "Servicio sin cubrir: faltan "+falta+" h/semana. Con esta plantilla el Gran Sol no puede dar todos los servicios que ha abierto. Cierra caja antes de mirar el EBITDA.";}
-    if(c.sem==="ok") return "Plantilla ajustada: personal al "+p+" % (dentro del 30-35 % objetivo). EBITDA ~"+eur(c.ebitda)+"/mes. Así se paga el traspaso y la deuda de Estrella.";
-    if(c.sem==="warn") return "Vas justo: personal al "+p+" %. Cada 1.000 € de más en nómina son 1.000 € menos de EBITDA — y sigues con 77.800 € de deuda cervecera viva.";
+    if(c.sem==="ok") return "Plantilla ajustada: personal al "+p+" % (dentro del 30-35 % objetivo). EBITDA ~"+eur(c.ebitda)+"/mes. Así se paga el traspaso y la financiación.";
+    if(c.sem==="warn") return "Vas justo: personal al "+p+" %. Cada 1.000 € de más en nómina son 1.000 € menos de EBITDA, y el margen es lo único que paga la financiación del traspaso.";
     var exc=c.personal-0.35*c.v;
-    return "Te pasas de plantilla: personal al "+p+" %. Te comes ~"+eur(exc)+"/mes de EBITDA ("+eur(exc*12)+"/año). A este ritmo la caja de arranque (12.000 €) no aguanta el rodaje.";
+    return "Te pasas de plantilla: personal al "+p+" %. Te comes ~"+eur(exc)+"/mes de EBITDA ("+eur(exc*12)+"/año). A este ritmo la caja de arranque no aguanta el rodaje.";
   }
   function verdict(c){
     var uncovered=0,peakDown=false;
@@ -450,10 +456,10 @@
     return {t:"Casi",cls:"warn"};
   }
 
-  // ---- Render ----
+  var lastEditAt=0, applyingRemote=false;
   function render(){
+    if(!applyingRemote) lastEditAt=Date.now();
     var c=compute();
-    // KPIs
     var semLab={ok:"Verde",warn:"Ámbar",bad:"Rojo"}[c.sem];
     $("#kpis").innerHTML=
       kpi("Coste de personal",eur(c.personal),"al mes")+
@@ -466,15 +472,12 @@
     $("#prepH").textContent=c.prepH;
     $("#headcount").textContent=state.workers.length+(state.workers.length===1?" persona":" personas");
 
-    // roster
     var r=$("#roster");r.innerHTML="";
     state.workers.forEach(function(w){
       var h=workerHours(w),cat=CATS[w.cat];
       var d=document.createElement("div");
       d.className="worker"+(state.brush===w.id?" sel":"");
-      var cost=workerCost(w);
-      var prepTxt=h.prep>0?(' · '+h.prep+' h prep'):'';
-      var fijo=w.jornada==="FIJO_COMPLETO";
+      var cost=workerCost(w), prepTxt=h.prep>0?(' · '+h.prep+' h prep'):'', fijo=w.jornada==="FIJO_COMPLETO";
       var costCtl=fijo
         ? '<span class="ci"><input class="cin" data-k="monthly" value="'+wMonthly(w)+'" title="Coste-empresa €/mes (editable)"> €/mes</span>'
         : '<span class="ci"><input class="cin" data-k="rate" value="'+wRate(w)+'" title="Coste-empresa €/hora (editable)"> €/h</span><br><span class="muted">'+eur(cost)+'/mes</span>';
@@ -492,18 +495,15 @@
       cin.addEventListener("change",function(){setCost(w.id,cin.getAttribute("data-k"),parseFloat(cin.value));});
       d.querySelector(".dot").addEventListener("click",function(e){e.stopPropagation();state.brush=state.brush===w.id?null:w.id;render();});
       d.addEventListener("click",function(e){if(e.target.classList.contains("x")){removeW(w.id);return;}
-        if(e.target.classList.contains("nmi"))return;
-        state.brush=state.brush===w.id?null:w.id;render();});
+        if(e.target.classList.contains("nmi"))return; state.brush=state.brush===w.id?null:w.id;render();});
       r.appendChild(d);
     });
     var bh=$("#brushHint");
     if(state.brush){var bw=getW(state.brush);bh.textContent="Asignando a "+(bw?bw.name:"")+" — pincha los turnos. Vuelve a pincharlo para soltar el pincel.";bh.className="whint act";}
     else{bh.textContent="Pincha una persona y luego los turnos. En cada chip ajustas sus horas; el nombre se edita aquí en la lista.";bh.className="whint";}
 
-    // editor de apertura
     renderEditor();
 
-    // week
     var wk=$("#week");wk.innerHTML="";
     DAYS.forEach(function(dn,di){
       var col=document.createElement("div");col.className="day";
@@ -518,33 +518,27 @@
         var timeLab=fmt(s.st)+"-"+fmt(s.en)+(s.prep?" · cerrado":"");
         slot.innerHTML='<div class="sh"><span class="fr">'+(s.prep?'🔒 ':'')+s.fr+(s.peak?' <span class="peakflag">PICO</span>':'')+'</span>'+
           '<span class="cnt '+(covered?"ok":"no")+'">'+hc+"/"+s.need+' · '+asg+'/'+req+' h</span>'+
-          '<span class="tlab muted">'+timeLab+'</span></div>'+
-          '<div class="chips"></div>'+
+          '<span class="tlab muted">'+timeLab+'</span></div><div class="chips"></div>'+
           '<div class="add">+ '+(armed?"añadir":"pincha 1 persona")+'</div>';
         var chips=slot.querySelector(".chips");
         state.assign[s.id].forEach(function(e){var w=getW(e.w);if(!w)return;
           var ch=document.createElement("span");ch.className="chip";ch.style.background=CATS[w.cat].color;
           ch.appendChild(document.createTextNode(w.name.split(/\s+/)[0]+" "));
           var inp=document.createElement("input");inp.type="number";inp.className="hin";inp.value=e.h;
-          inp.min="0.5";inp.max=String(s.h);inp.step="0.5";inp.title="horas de "+w.name.split(/\s+/)[0]+" en esta franja (máx "+s.h+" h)";
+          inp.min="0.5";inp.max=String(s.h);inp.step="0.5";inp.title="horas en esta franja (máx "+s.h+" h)";
           inp.addEventListener("click",function(ev){ev.stopPropagation();});
           inp.addEventListener("keydown",function(ev){ev.stopPropagation();});
           inp.addEventListener("change",function(ev){ev.stopPropagation();setHours(s.id,e.w,parseFloat(inp.value));});
           ch.appendChild(inp);ch.appendChild(document.createTextNode("h"));
           var x=document.createElement("span");x.className="cx";x.textContent="×";x.title="Quitar";
           x.addEventListener("click",function(ev){ev.stopPropagation();unassign(s.id,e.w);});
-          ch.appendChild(x);
-          chips.appendChild(ch);});
-        slot.addEventListener("click",function(){
-          if(state.brush==null){flashHint();return;}
-          toggleAssign(s.id,state.brush);
-        });
+          ch.appendChild(x); chips.appendChild(ch);});
+        slot.addEventListener("click",function(){if(state.brush==null){flashHint();return;}toggleAssign(s.id,state.brush);});
         col.appendChild(slot);
       });
       wk.appendChild(col);
     });
 
-    // verdict
     var vd=verdict(c);
     var vs=$("#vstate");vs.textContent=vd.t;vs.style.color="var(--"+(vd.cls==="muted"?"ink-soft":vd.cls)+")";
     $("#vstars").innerHTML=state.workers.length?("★".repeat(c.stars)+"☆".repeat(5-c.stars)):"";
@@ -554,9 +548,9 @@
     $("#msgCfo").style.borderColor= c.sem==="bad"?"var(--bad)":c.sem==="warn"?"var(--warn)":"var(--ok)";
     $("#msgCfo").querySelector(".who").style.color= c.sem==="bad"?"var(--bad)":c.sem==="warn"?"var(--warn)":"var(--ok)";
 
-    var wn=warnings(),wc=$("#warns");wc.innerHTML="";
-    wn.forEach(function(x){var e=document.createElement("div");e.className="warn-item"+(x.hard?" hard":"");e.innerHTML=x.t;wc.appendChild(e);});
-    save();
+    var wn=warnings(),wc2=$("#warns");wc2.innerHTML="";
+    wn.forEach(function(x){var e=document.createElement("div");e.className="warn-item"+(x.hard?" hard":"");e.innerHTML=x.t;wc2.appendChild(e);});
+    scheduleSync();
   }
   function renderEditor(){
     var b=$("#schedBody"); if(!b)return; b.innerHTML="";
@@ -566,13 +560,21 @@
       var wrap=document.createElement("div"); wrap.className="schedbands";
       SHIFTS.filter(function(s){return s.di===di;}).forEach(function(s){
         var lbl=s.prep?(s.st<12?"Prep mañana":"Prep tarde"):s.fr;
-        var btn=document.createElement("button");
-        btn.className="bandtog"+(active(s)?" on":"")+(s.prep?" prep":"");
-        btn.setAttribute("aria-pressed",active(s));
-        btn.innerHTML='<span>'+(s.prep?"🔒 ":"")+lbl+'</span><small>'+fmt(s.st)+"-"+fmt(s.en)+'</small>';
-        btn.title=(active(s)?"Abierto":"Cerrado")+" — pincha para cambiar";
-        btn.addEventListener("click",function(){state.open[s.id]=!active(s);render();});
-        wrap.appendChild(btn);
+        var cell=document.createElement("div"); cell.className="bandcell"+(active(s)?" on":"")+(s.prep?" prep":"");
+        var tog=document.createElement("button"); tog.className="bandtog2";
+        tog.innerHTML='<span>'+(s.prep?"🔒 ":"")+lbl+'</span><small>'+(active(s)?"abierto":"cerrado")+'</small>';
+        tog.addEventListener("click",function(){state.open[s.id]=!active(s);render();});
+        cell.appendChild(tog);
+        var tw=document.createElement("div"); tw.className="tw";
+        var inSt=document.createElement("input");inSt.type="time";inSt.className="tin";inSt.value=fmt(s.st);inSt.title="Entrada";
+        var inEn=document.createElement("input");inEn.type="time";inEn.className="tin";inEn.value=fmt(s.en);inEn.title="Salida";
+        function commit(){var a=hm(inSt.value),bb=hm(inEn.value);if(a==null||bb==null)return;if(bb<=a)bb+=24;if(bb-a<0.5)bb=a+0.5;
+          state.times[s.id]={st:a,en:bb};applyTimes();render();}
+        inSt.addEventListener("change",commit);inEn.addEventListener("change",commit);
+        [inSt,inEn].forEach(function(x){x.addEventListener("click",function(e){e.stopPropagation();});});
+        var sep=document.createElement("span");sep.className="tsep";sep.textContent="–";
+        tw.appendChild(inSt);tw.appendChild(sep);tw.appendChild(inEn);
+        cell.appendChild(tw); wrap.appendChild(cell);
       });
       row.appendChild(wrap); b.appendChild(row);
     });
@@ -585,7 +587,6 @@
   function flashHint(){var b=$("#brushHint");b.textContent="Primero pincha un trabajador de la lista para elegir a quién asignas.";b.className="whint act";
     clearTimeout(hintTimer);hintTimer=setTimeout(render,1800);}
 
-  // ---- Acciones ----
   function toggleAssign(sid,wid){var a=state.assign[sid];var i=-1;for(var k=0;k<a.length;k++)if(a[k].w===wid)i=k;
     if(i>=0)a.splice(i,1);else a.push({w:wid,h:SHIFT(sid).h});render();}
   function unassign(sid,wid){var a=state.assign[sid];for(var k=0;k<a.length;k++)if(a[k].w===wid){a.splice(k,1);break;}render();}
@@ -599,10 +600,10 @@
   function addWorker(name,cat,jor){var id="w"+(state.seq++);
     state.workers.push({id:id,name:name,cat:cat,jornada:jor,rate:CATS[cat].rate,monthly:CATS[cat].monthly});return id;}
 
-  // ---- Preset: plantilla de Carlos ----
   function loadPreset(){
-    state.workers=[];state.brush=null;state.seq=1;
+    state.workers=[];state.brush=null;state.seq=1;state.times={};
     SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});
+    applyTimes();
     var ana=addWorker("Ana López","encargado","FIJO_COMPLETO");
     var diego=addWorker("Diego Ruiz","jefe_cocina","FIJO_COMPLETO");
     var marta=addWorker("Marta Gil","extra","POR_HORAS");
@@ -619,9 +620,123 @@
     Object.keys(A).forEach(function(k){var s=SHIFT(k);state.assign[k]=A[k].map(function(id){return {w:id,h:s.h};});});
     render();
   }
+  function resetBoard(){state.workers=[];state.brush=null;state.seq=1;state.times={};
+    SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});applyTimes();render();}
 
-  function reset(){state.workers=[];state.brush=null;state.seq=1;
-    SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});render();}
+  // ---------- Estado <-> escenario (Supabase) ----------
+  var clientId=Math.random().toString(36).slice(2)+Date.now().toString(36);
+  var myName=localStorage.getItem("gs_name")||"";
+  var scenarios=[]; var chan=null; var pendingRemote=null; var joined=false; var cursors={};
+  function colorFor(seed){var h=0;for(var i=0;i<seed.length;i++)h=(h*31+seed.charCodeAt(i))>>>0;return "hsl("+(h%360)+",68%,45%)";}
+  var myColor=colorFor(clientId);
+  function knownNames(){var set={};scenarios.forEach(function(s){if(s.creado_por)set[s.creado_por]=1;if(s.actualizado_por)set[s.actualizado_por]=1;});if(myName)delete set[myName];return Object.keys(set);}
+  function showGate(cb){var g=$("#gate");if(!g){cb();return;}
+    var chips=$("#gateChips");chips.innerHTML="";
+    var inp=$("#gateInput");inp.value="";
+    function finish(n){n=(n||inp.value||"").trim().slice(0,24);if(!n){inp.focus();return;}
+      myName=n;localStorage.setItem("gs_name",myName);myColor=colorFor(clientId);
+      var nb=$("#nameBtn");if(nb)nb.textContent="👤 "+myName;g.hidden=true;cb();}
+    knownNames().forEach(function(n){var b=document.createElement("button");b.type="button";b.textContent=n;b.addEventListener("click",function(){finish(n);});chips.appendChild(b);});
+    $("#gateGo").onclick=function(){finish();};
+    inp.onkeydown=function(e){if(e.key==="Enter")finish();};
+    g.hidden=false;setTimeout(function(){inp.focus();},60);
+  }
+  function renderCursors(){var box=$("#cursors");if(!box)return;var now=Date.now();
+    Object.keys(cursors).forEach(function(id){var c=cursors[id];if(now-c.t>6000){delete cursors[id];var old=box.querySelector('[data-id="'+id+'"]');if(old)old.remove();return;}
+      var el=box.querySelector('[data-id="'+id+'"]');
+      if(!el){el=document.createElement("div");el.className="rcur";el.setAttribute("data-id",id);
+        el.innerHTML='<svg width="20" height="20" viewBox="0 0 20 20"><path d="M2 2 L2 16 L6 12 L9 18 L11 17 L8 11 L14 11 Z" fill="'+c.color+'" stroke="#fff" stroke-width="1.2"/></svg><span class="lbl" style="background:'+c.color+'"></span>';
+        box.appendChild(el);}
+      el.querySelector(".lbl").textContent=c.name||"—";
+      el.style.left=(c.x*window.innerWidth)+"px";el.style.top=(c.y*window.innerHeight)+"px";
+    });
+  }
+
+  function snapEstado(){return {v:5,workers:state.workers,assign:state.assign,open:state.open,times:state.times,
+    scenario:state.scenario,noct:state.noct,seq:state.seq,_c:clientId,_by:myName};}
+  function applyEstado(o){
+    if(!o)return;
+    state.workers=Array.isArray(o.workers)?o.workers:[];
+    state.scenario=SCEN[o.scenario]?o.scenario:"base";
+    state.noct=o.noct!==false; state.seq=o.seq||(state.workers.length+1);
+    state.times={}; if(o.times)Object.keys(o.times).forEach(function(k){var t=o.times[k];if(t&&typeof t.st==="number"&&typeof t.en==="number")state.times[k]={st:t.st,en:t.en};});
+    SHIFTS.forEach(function(s){
+      state.open[s.id]=(o.open&&typeof o.open[s.id]==="boolean")?o.open[s.id]:(!s.prep&&s.di<=5);
+      var prev=(o.assign&&o.assign[s.id])||[];
+      state.assign[s.id]=prev.filter(function(e){return e&&state.workers.some(function(w){return w.id===e.w;});}).map(function(e){return {w:e.w,h:e.h||s.h};});
+    });
+    applyTimes();
+  }
+  function setStatus(t){var e=$("#saveStatus");if(e)e.textContent=t;}
+  var syncTimer=null;
+  function scheduleSync(){ if(applyingRemote||!sb||!state.scenarioId)return; clearTimeout(syncTimer); syncTimer=setTimeout(pushState,700); }
+  function pushState(){ if(!sb||!state.scenarioId)return; setStatus("Guardando…");
+    sb.from("gransol_escenarios").update({estado:snapEstado(),actualizado_por:myName,updated_at:new Date().toISOString()}).eq("id",state.scenarioId)
+      .then(function(res){ setStatus(res&&res.error?"Error al guardar":"Guardado ✓"); });
+  }
+  function fetchScenarios(){ if(!sb)return Promise.resolve();
+    return sb.from("gransol_escenarios").select("id,nombre,updated_at,actualizado_por,creado_por").order("updated_at",{ascending:false})
+      .then(function(res){ if(res&&!res.error){ scenarios=res.data||[]; renderScenSelect(); } return scenarios; });
+  }
+  function renderScenSelect(){ var sel=$("#scenSel"); if(!sel)return; sel.innerHTML="";
+    scenarios.forEach(function(s){var o=document.createElement("option");o.value=s.id;
+      o.textContent=s.nombre+(s.creado_por?(" · creó "+s.creado_por):"")+(s.actualizado_por&&s.actualizado_por!==s.creado_por?(" · editó "+s.actualizado_por):"");
+      sel.appendChild(o);});
+    if(state.scenarioId)sel.value=state.scenarioId;
+  }
+  function selectScenario(id){ if(!sb)return; state.scenarioId=id; localStorage.setItem("gs_active",id); setStatus("Cargando…");
+    sb.from("gransol_escenarios").select("estado,nombre").eq("id",id).single().then(function(res){
+      if(res&&res.data){ applyingRemote=true; applyEstado(res.data.estado); applyingRemote=false; renderScenSelect(); render(); setStatus("En vivo ✓"); }
+    });
+  }
+  function newScenario(name,keepBoard){ if(!sb)return; if(!keepBoard)loadPreset();
+    sb.from("gransol_escenarios").insert({nombre:name,estado:snapEstado(),actualizado_por:myName,creado_por:myName}).select("id").then(function(res){
+      if(res&&res.data&&res.data[0]){ state.scenarioId=res.data[0].id; localStorage.setItem("gs_active",state.scenarioId); setStatus("Creado ✓"); fetchScenarios(); }
+    });
+  }
+  function renameScenario(){ if(!sb||!state.scenarioId)return; var cur=(scenarios.filter(function(s){return s.id===state.scenarioId;})[0]||{}).nombre||"";
+    var n=prompt("Nuevo nombre del escenario:",cur); if(!n)return;
+    sb.from("gransol_escenarios").update({nombre:n}).eq("id",state.scenarioId).then(fetchScenarios);
+  }
+  function delScenario(){ if(!sb||!state.scenarioId)return; if(!confirm("¿Borrar este escenario para todos?"))return;
+    var id=state.scenarioId; sb.from("gransol_escenarios").delete().eq("id",id).then(function(){ state.scenarioId=null;
+      fetchScenarios().then(function(){ if(scenarios.length)selectScenario(scenarios[0].id); else newScenario("Escenario base"); }); });
+  }
+  function shareLink(){ if(!state.scenarioId)return; var link=location.origin+location.pathname+"?scn="+state.scenarioId;
+    if(navigator.clipboard)navigator.clipboard.writeText(link).then(function(){setStatus("Enlace copiado ✓");},function(){prompt("Copia el enlace:",link);});
+    else prompt("Copia el enlace:",link);
+  }
+  function renderPresence(names){ var e=$("#presence"); if(!e)return; e.innerHTML="";
+    names.forEach(function(n){var s=document.createElement("span");s.className="pchip"+(n===myName?" me":"");s.textContent=n||"—";e.appendChild(s);});
+  }
+  function ensureName(){ if(!myName){ myName=(prompt("¿Cómo te llamas? (para la sala compartida)","")||"Invitado").slice(0,24); localStorage.setItem("gs_name",myName); }
+    var nb=$("#nameBtn"); if(nb)nb.textContent="👤 "+myName;
+  }
+  function subscribe(){ if(!sb)return;
+    chan=sb.channel("gransol_room",{config:{presence:{key:clientId}}});
+    chan.on("postgres_changes",{event:"*",schema:"public",table:"gransol_escenarios"},function(payload){
+      fetchScenarios();
+      if(payload.eventType==="UPDATE"&&payload.new&&payload.new.id===state.scenarioId){
+        var est=payload.new.estado;
+        if(est&&est._c!==clientId){
+          if(Date.now()-lastEditAt>2500){ applyingRemote=true; applyEstado(est); applyingRemote=false; render(); setStatus("Actualizado por "+(payload.new.actualizado_por||"otro")); }
+          else pendingRemote=est;
+        }
+      }
+      if(payload.eventType==="DELETE"&&payload.old&&payload.old.id===state.scenarioId){ state.scenarioId=null; setStatus("Escenario borrado"); }
+    });
+    chan.on("presence",{event:"sync"},function(){ var st=chan.presenceState(); var names={};
+      Object.keys(st).forEach(function(k){(st[k]||[]).forEach(function(p){if(p.name)names[p.name]=true;});});
+      renderPresence(Object.keys(names)); });
+    chan.on("broadcast",{event:"cursor"},function(m){var p=m.payload;if(!p||p.id===clientId)return;
+      cursors[p.id]={name:p.name,x:p.x,y:p.y,color:p.color,t:Date.now()};renderCursors();});
+    chan.subscribe(function(status){ if(status==="SUBSCRIBED"){ joined=true; chan.track({name:myName}); } });
+    var lastSent=0;
+    window.addEventListener("mousemove",function(e){var now=Date.now();if(now-lastSent<55||!joined)return;lastSent=now;
+      chan.send({type:"broadcast",event:"cursor",payload:{id:clientId,name:myName,color:myColor,x:e.clientX/window.innerWidth,y:e.clientY/window.innerHeight}});});
+    setInterval(function(){ renderCursors();
+      if(pendingRemote&&Date.now()-lastEditAt>2500){ var est=pendingRemote;pendingRemote=null; applyingRemote=true; applyEstado(est); applyingRemote=false; render(); setStatus("Actualizado ✓"); } },1500);
+  }
 
   // ---- Init UI ----
   var wc=$("#wc");Object.keys(CATS).forEach(function(k){var o=document.createElement("option");o.value=k;o.textContent=CATS[k].lab;wc.appendChild(o);});
@@ -630,62 +745,14 @@
     var id=addWorker(n,$("#wc").value,$("#wj").value);$("#wn").value="";state.brush=id;render();$("#wn").focus();});
   $("#wn").addEventListener("keydown",function(e){if(e.key==="Enter")$("#addW").click();});
   $("#loadPreset").addEventListener("click",loadPreset);
-  $("#reset").addEventListener("click",reset);
   $("#export").addEventListener("click",exportCSV);
-
-  // ---- Exportar a Excel (CSV con BOM UTF-8) ----
-  function exportCSV(){
-    var c=compute();
-    var q=function(s){return '"'+String(s).replace(/"/g,'""')+'"';};
-    var rows=[];
-    rows.push(["CERVECERÍA GRAN SOL — HORARIO SEMANAL"]);
-    rows.push(["Escenario de ventas",SCEN[state.scenario].lab,SCEN[state.scenario].v+" €/mes","Nocturnidad",state.noct?"aplicada (+25%)":"sin aplicar"]);
-    rows.push([]);
-    // Parrilla
-    rows.push(["PARRILLA DE TURNOS"]);
-    rows.push(["Día","Franja","Tipo","Horario","Personas req.","Personas asign.","Horas franja","Equipo asignado (horas de cada uno)"]);
-    SHIFTS.forEach(function(s){
-      if(!active(s))return;
-      var time=fmt(s.st)+"-"+fmt(s.en);
-      var team=state.assign[s.id].map(function(e){var w=getW(e.w);return w?(w.name+" ("+e.h+"h)"):"";}).filter(Boolean).join(" · ");
-      rows.push([DAYS[s.di],s.fr+(s.peak?" (PICO)":""),s.prep?"Preparación (cerrado)":"Servicio",time,s.need,state.assign[s.id].length,s.h,team]);
-    });
-    rows.push([]);
-    // Plantilla
-    rows.push(["PLANTILLA"]);
-    rows.push(["Nombre","Categoría","Jornada","Coste unitario","Horas/semana","de ellas prep","Días/semana","H. nocturnas","Coste €/mes"]);
-    state.workers.forEach(function(w){var h=workerHours(w);var fijo=w.jornada==="FIJO_COMPLETO";
-      rows.push([w.name,CATS[w.cat].lab,fijo?"Fijo completa":"Por horas",fijo?(wMonthly(w)+" €/mes"):(wRate(w)+" €/h"),h.week,h.prep,h.days,h.noct,Math.round(workerCost(w))]);
-    });
-    rows.push([]);
-    // Resumen
-    rows.push(["RESUMEN"]);
-    rows.push(["Coste de personal (€/mes)",Math.round(c.personal)]);
-    rows.push(["% sobre ventas",c.pct.toFixed(1)+" %"]);
-    rows.push(["Horas fijas / por horas (sem)",c.fijoH+" / "+c.varH]);
-    rows.push(["Cobertura del servicio",Math.round(c.cobertura*100)+" %"]);
-    rows.push(["EBITDA estimado (€/mes)",Math.round(c.ebitda)]);
-    rows.push(["Puntuación",c.score+"/100"]);
-    var csv=rows.map(function(r){return r.map(q).join(";");}).join("\r\n");
-    var name="Gran_Sol_horario_"+state.scenario+".csv";
-    // 1) descarga normal (Blob)
-    try{
-      var blob=new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8;"});
-      var url=URL.createObjectURL(blob),a=document.createElement("a");
-      a.href=url;a.download=name;a.rel="noopener";
-      document.body.appendChild(a);a.click();document.body.removeChild(a);
-      setTimeout(function(){URL.revokeObjectURL(url);},1500);
-      return;
-    }catch(e){}
-    // 2) si el visor bloquea la descarga: abrir en pestaña nueva
-    try{var w=window.open("data:text/csv;charset=utf-8,%EF%BB%BF"+encodeURIComponent(csv),"_blank");if(w)return;}catch(e){}
-    // 3) último recurso: copiar al portapapeles para pegar en Excel
-    try{navigator.clipboard.writeText(csv);
-      alert("El visor no permite descargar el archivo aquí. El horario se ha copiado al portapapeles: abre una hoja de Excel en blanco y pega (Ctrl+V). O ábrelo desde el archivo HTML descargado, donde la exportación no tiene restricción.");
-    }catch(e){
-      alert("El visor no permite descargar el archivo aquí. Ábrelo desde el archivo HTML descargado (adjunto en el correo), donde la exportación a Excel funciona sin restricción.");
-    }
-  }
+  $("#scenSel").addEventListener("change",function(){selectScenario(this.value);});
+  $("#scenNew").addEventListener("click",function(){var n=prompt("Nombre del escenario nuevo:","Escenario "+(scenarios.length+1));if(n)newScenario(n,false);});
+  $("#scenDup").addEventListener("click",function(){var n=prompt("Nombre del escenario duplicado:","Copia");if(n)newScenario(n,true);});
+  $("#scenRen").addEventListener("click",renameScenario);
+  $("#scenDel").addEventListener("click",delScenario);
+  $("#scenShare").addEventListener("click",shareLink);
+  $("#nameBtn").addEventListener("click",function(){var n=prompt("Tu nombre en la sala:",myName);if(n){myName=n.slice(0,24);localStorage.setItem("gs_name",myName);$("#nameBtn").textContent="👤 "+myName;if(chan)chan.track({name:myName});}});
   $("#noct").checked=state.noct;
   $("#noct").addEventListener("change",function(){state.noct=this.checked;render();});
 
@@ -700,6 +767,60 @@
     var next= cur==="dark"?"light":(cur==="light"?"dark":(matchMedia("(prefers-color-scheme:dark)").matches?"light":"dark"));
     document.documentElement.setAttribute("data-theme",next);});
 
-  if(state.workers.length===0)loadPreset(); else render();
+  function exportCSV(){
+    var c=compute();
+    var q=function(s){return '"'+String(s).replace(/"/g,'""')+'"';};
+    var rows=[];
+    rows.push(["CERVECERÍA GRAN SOL — HORARIO SEMANAL"]);
+    rows.push(["Escenario de ventas",SCEN[state.scenario].lab,SCEN[state.scenario].v+" €/mes","Nocturnidad",state.noct?"aplicada (+25%)":"sin aplicar"]);
+    rows.push([]);
+    rows.push(["PARRILLA DE TURNOS"]);
+    rows.push(["Día","Franja","Tipo","Horario","Personas req.","Personas asign.","Horas franja","Equipo asignado (horas de cada uno)"]);
+    SHIFTS.forEach(function(s){ if(!active(s))return;
+      var time=fmt(s.st)+"-"+fmt(s.en);
+      var team=state.assign[s.id].map(function(e){var w=getW(e.w);return w?(w.name+" ("+e.h+"h)"):"";}).filter(Boolean).join(" · ");
+      rows.push([DAYS[s.di],s.fr+(s.peak?" (PICO)":""),s.prep?"Preparación (cerrado)":"Servicio",time,s.need,state.assign[s.id].length,s.h,team]);
+    });
+    rows.push([]);
+    rows.push(["PLANTILLA"]);
+    rows.push(["Nombre","Categoría","Jornada","Coste unitario","Horas/semana","de ellas prep","Días/semana","H. nocturnas","Coste €/mes"]);
+    state.workers.forEach(function(w){var h=workerHours(w);var fijo=w.jornada==="FIJO_COMPLETO";
+      rows.push([w.name,CATS[w.cat].lab,fijo?"Fijo completa":"Por horas",fijo?(wMonthly(w)+" €/mes"):(wRate(w)+" €/h"),h.week,h.prep,h.days,h.noct,Math.round(workerCost(w))]);
+    });
+    rows.push([]);
+    rows.push(["RESUMEN"]);
+    rows.push(["Coste de personal (€/mes)",Math.round(c.personal)]);
+    rows.push(["% sobre ventas",c.pct.toFixed(1)+" %"]);
+    rows.push(["Horas fijas / por horas (sem)",c.fijoH+" / "+c.varH]);
+    rows.push(["Cobertura del servicio",Math.round(c.cobertura*100)+" %"]);
+    rows.push(["EBITDA estimado (€/mes)",Math.round(c.ebitda)]);
+    rows.push(["Puntuación",c.score+"/100"]);
+    var csv=rows.map(function(r){return r.map(q).join(";");}).join("\r\n");
+    var name="Gran_Sol_horario_"+state.scenario+".csv";
+    try{var blob=new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8;"});
+      var url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;a.rel="noopener";
+      document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},1500);return;
+    }catch(e){}
+    try{var w=window.open("data:text/csv;charset=utf-8,%EF%BB%BF"+encodeURIComponent(csv),"_blank");if(w)return;}catch(e){}
+    try{navigator.clipboard.writeText(csv);alert("Horario copiado al portapapeles: pégalo en una hoja de Excel en blanco.");}catch(e){alert("No se pudo exportar aquí.");}
+  }
+
+  // ---- Boot ----
+  ensureName();
+  loadPreset(); // pinta algo mientras conecta
+  if(sb){
+    setStatus("conectando…");
+    fetchScenarios().then(function(){
+      function proceed(){
+        var want=(new URLSearchParams(location.search)).get("scn")||localStorage.getItem("gs_active");
+        if(want&&scenarios.some(function(s){return s.id===want;})) selectScenario(want);
+        else if(scenarios.length) selectScenario(scenarios[0].id);
+        else newScenario("Escenario base",true);
+        subscribe();
+      }
+      if(myName){ $("#nameBtn").textContent="👤 "+myName; myColor=colorFor(clientId); proceed(); }
+      else showGate(proceed);
+    });
+  } else { ensureName(); setStatus("sin conexión (modo local)"); }
 })();
 </script>
