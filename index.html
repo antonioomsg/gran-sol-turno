@@ -185,6 +185,12 @@
   .tw{display:flex;align-items:center;gap:3px;margin-top:4px}
   .tin{width:100%;padding:2px 3px;font-size:10.5px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);font-family:var(--mono)}
   .tsep{color:var(--ink-soft);font-size:10px}
+  /* editar escenario (económico) */
+  .econgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .econgrid label{display:flex;flex-direction:column;gap:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);font-weight:600}
+  .econgrid input{font-family:var(--mono);font-weight:600}
+  .econreadout{margin-top:12px;font-size:13px;color:var(--ink);background:var(--panel-2);border-radius:9px;padding:9px 12px}
+  .econreadout b{color:var(--accent)}
 
   /* portada de nombre */
   .gate{position:fixed;inset:0;background:rgba(20,15,8,.55);backdrop-filter:blur(4px);z-index:80;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -268,6 +274,21 @@
   <details class="adv sched" id="schedWrap">
     <summary><span>Editar apertura y horas — qué abre cada día</span><span class="muted" id="schedSummary"></span></summary>
     <div class="bd"><p class="schednote">Pincha el nombre de cada franja para abrirla o cerrarla, y edita las horas de entrada/salida. Puedes tocar mediodía, noche y las dos preparaciones (restaurante cerrado, plantilla trabajando) en cualquier día, incluido el domingo.</p><div class="schedgrid" id="schedBody"></div></div>
+  </details>
+
+  <details class="adv econ" id="econWrap">
+    <summary><span>Editar escenario — ventas, margen y EBITDA</span><span class="muted" id="econSummary"></span></summary>
+    <div class="bd">
+      <p class="schednote">Supuestos económicos del escenario (se guardan y se comparten en la sala). El sueldo de cada persona se edita en la lista de <b>Plantilla</b>, en la columna de coste (€/mes para fijos, €/h para eventuales).</p>
+      <div class="econgrid">
+        <label>Ventas Bajo (€/mes)<input type="number" id="ecBajo" min="0" step="100"></label>
+        <label>Ventas Base (€/mes)<input type="number" id="ecBase" min="0" step="100"></label>
+        <label>Ventas Alto (€/mes)<input type="number" id="ecAlto" min="0" step="100"></label>
+        <label>Margen bruto (%)<input type="number" id="ecMargen" min="0" max="100" step="0.1"></label>
+        <label>Gastos operativos, sin personal (€/mes)<input type="number" id="ecOpex" min="0" step="50"></label>
+      </div>
+      <div class="econreadout" id="econReadout"></div>
+    </div>
   </details>
 
   <div class="grid2">
@@ -368,7 +389,8 @@
   var SCEN={bajo:{lab:"Bajo",v:15574},base:{lab:"Base",v:28013},alto:{lab:"Alto",v:44125}};
   var OPEX=5220, MARGEN=0.687;
 
-  var state={workers:[], assign:{}, open:{}, times:{}, scenario:"base", noct:true, brush:null, seq:1, scenarioId:null};
+  var state={workers:[], assign:{}, open:{}, times:{}, scenario:"base", noct:true, brush:null, seq:1, scenarioId:null,
+    econ:{bajo:15574,base:28013,alto:44125,margen:0.687,opex:5220}};
   SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});
   function active(s){return state.open[s.id]===true;}
   function totalSvcH(){var t=0;SVC.forEach(function(s){if(active(s))t+=s.need*s.h;});return t;}
@@ -411,9 +433,9 @@
         if(w.jornada==="FIJO_COMPLETO")fijoH+=e.h; else varH+=e.h;});
     });
     progH=Math.round(progH*10)/10; prepH=Math.round(prepH*10)/10; fijoH=Math.round(fijoH*10)/10; varH=Math.round(varH*10)/10;
-    var v=SCEN[state.scenario].v;
+    var v=state.econ[state.scenario];
     var pct= personal>0? personal/v*100 : 0;
-    var ebitda= v*MARGEN - personal - OPEX;
+    var ebitda= v*state.econ.margen - personal - state.econ.opex;
     var tot=totalSvcH();
     var cobertura= tot>0? coveredNeedH/tot : 0;
     var sem= pct<=35?"ok":(pct<=42?"warn":"bad");
@@ -527,6 +549,7 @@
     else{bh.textContent="Pincha una persona y luego los turnos. En cada chip ajustas sus horas; el nombre se edita aquí en la lista.";bh.className="whint";}
 
     renderEditor();
+    renderEcon();
 
     var wk=$("#week");wk.innerHTML="";
     DAYS.forEach(function(dn,di){
@@ -605,6 +628,16 @@
     var days=0; DAYS.forEach(function(dn,di){if(SHIFTS.some(function(s){return s.di===di&&active(s);}))days++;});
     var ss=$("#schedSummary"); if(ss)ss.textContent=days+(days===1?" día abierto · ":" días abiertos · ")+totalSvcH()+" h servicio";
   }
+  function renderEcon(){
+    var map={ecBajo:"bajo",ecBase:"base",ecAlto:"alto"};
+    Object.keys(map).forEach(function(id){var el=$("#"+id);if(el&&el!==document.activeElement)el.value=state.econ[map[id]];});
+    var m=$("#ecMargen");if(m&&m!==document.activeElement)m.value=Math.round(state.econ.margen*1000)/10;
+    var o=$("#ecOpex");if(o&&o!==document.activeElement)o.value=state.econ.opex;
+    var personal=0;state.workers.forEach(function(w){personal+=workerCost(w);});
+    function eb(k){return Math.round(state.econ[k]*state.econ.margen - personal - state.econ.opex);}
+    var ro=$("#econReadout");if(ro)ro.innerHTML="Con el coste de personal actual ("+eur(personal)+"/mes) y margen "+(state.econ.margen*100).toFixed(1)+"% — EBITDA estimado: <b>Bajo</b> "+eur(eb("bajo"))+" · <b>Base</b> "+eur(eb("base"))+" · <b>Alto</b> "+eur(eb("alto"))+" al mes.";
+    var es=$("#econSummary");if(es)es.textContent="Base "+eur(state.econ.base)+"/mes · margen "+(state.econ.margen*100).toFixed(0)+"%";
+  }
   function kpi(l,v,s){return '<div class="kpi"><div class="lab">'+l+'</div><div class="val">'+v+'</div><div class="sub">'+(s||"")+'</div></div>';}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   var hintTimer;
@@ -679,11 +712,12 @@
   }
 
   function snapEstado(){return {v:5,workers:state.workers,assign:state.assign,open:state.open,times:state.times,
-    scenario:state.scenario,noct:state.noct,seq:state.seq,_c:clientId,_by:myName};}
+    econ:state.econ,scenario:state.scenario,noct:state.noct,seq:state.seq,_c:clientId,_by:myName};}
   function applyEstado(o){
     if(!o)return;
     state.workers=Array.isArray(o.workers)?o.workers:[];
     state.scenario=SCEN[o.scenario]?o.scenario:"base";
+    var e=o.econ||{}; state.econ={bajo:+e.bajo||15574,base:+e.base||28013,alto:+e.alto||44125,margen:(e.margen!=null&&!isNaN(+e.margen)?+e.margen:0.687),opex:(e.opex!=null&&!isNaN(+e.opex)?+e.opex:5220)};
     state.noct=o.noct!==false; state.seq=o.seq||(state.workers.length+1);
     state.times={}; if(o.times)Object.keys(o.times).forEach(function(k){var t=o.times[k];if(t&&typeof t.st==="number"&&typeof t.en==="number")state.times[k]={st:t.st,en:t.en};});
     SHIFTS.forEach(function(s){
@@ -789,6 +823,10 @@
   $("#nameBtn").addEventListener("click",function(){var n=prompt("Tu nombre en la sala:",myName);if(n){myName=n.slice(0,24);localStorage.setItem("gs_name",myName);$("#nameBtn").textContent="👤 "+myName;if(roomChan)roomChan.track({name:myName});}});
   $("#noct").checked=state.noct;
   $("#noct").addEventListener("change",function(){state.noct=this.checked;render();});
+  [["ecBajo","bajo"],["ecBase","base"],["ecAlto","alto"]].forEach(function(p){var el=$("#"+p[0]);
+    el.addEventListener("change",function(){var v=parseFloat(el.value);if(!isNaN(v)&&v>=0){state.econ[p[1]]=Math.round(v);render();}});});
+  $("#ecMargen").addEventListener("change",function(){var v=parseFloat($("#ecMargen").value);if(!isNaN(v)&&v>=0&&v<=100){state.econ.margen=v/100;render();}});
+  $("#ecOpex").addEventListener("change",function(){var v=parseFloat($("#ecOpex").value);if(!isNaN(v)&&v>=0){state.econ.opex=Math.round(v);render();}});
 
   var sc=$("#scenario");Object.keys(SCEN).forEach(function(k){var b=document.createElement("button");
     b.textContent=SCEN[k].lab;b.className=state.scenario===k?"on":"";b.setAttribute("aria-pressed",state.scenario===k);
@@ -806,7 +844,7 @@
     var q=function(s){return '"'+String(s).replace(/"/g,'""')+'"';};
     var rows=[];
     rows.push(["CERVECERÍA GRAN SOL — HORARIO SEMANAL"]);
-    rows.push(["Escenario de ventas",SCEN[state.scenario].lab,SCEN[state.scenario].v+" €/mes","Nocturnidad",state.noct?"aplicada (+25%)":"sin aplicar"]);
+    rows.push(["Escenario de ventas",SCEN[state.scenario].lab,state.econ[state.scenario]+" €/mes","Margen",(state.econ.margen*100).toFixed(1)+"%","OPEX",state.econ.opex+" €/mes","Nocturnidad",state.noct?"aplicada (+25%)":"sin aplicar"]);
     rows.push([]);
     rows.push(["PARRILLA DE TURNOS"]);
     rows.push(["Día","Franja","Tipo","Horario","Personas req.","Personas asign.","Horas franja","Equipo asignado (horas de cada uno)"]);
