@@ -71,6 +71,7 @@
   .presence{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
   .pchip{font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:20px;padding:2px 9px}
   .pchip.me{background:var(--ink);color:var(--bg)}
+  .pcount{font-size:11px;font-weight:700;color:var(--ink-soft);align-self:center}
 
   .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
   .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
@@ -686,12 +687,12 @@
   }
   function selectScenario(id){ if(!sb)return; state.scenarioId=id; localStorage.setItem("gs_active",id); setStatus("Cargando…");
     sb.from("gransol_escenarios").select("estado,nombre").eq("id",id).single().then(function(res){
-      if(res&&res.data){ applyingRemote=true; applyEstado(res.data.estado); applyingRemote=false; renderScenSelect(); render(); setStatus("En vivo ✓"); }
+      if(res&&res.data){ applyingRemote=true; applyEstado(res.data.estado); applyingRemote=false; renderScenSelect(); render(); setStatus("En vivo ✓"); joinRoom(id); }
     });
   }
   function newScenario(name,keepBoard){ if(!sb)return; if(!keepBoard)loadPreset();
     sb.from("gransol_escenarios").insert({nombre:name,estado:snapEstado(),actualizado_por:myName,creado_por:myName}).select("id").then(function(res){
-      if(res&&res.data&&res.data[0]){ state.scenarioId=res.data[0].id; localStorage.setItem("gs_active",state.scenarioId); setStatus("Creado ✓"); fetchScenarios(); }
+      if(res&&res.data&&res.data[0]){ state.scenarioId=res.data[0].id; localStorage.setItem("gs_active",state.scenarioId); setStatus("Creado ✓"); fetchScenarios(); joinRoom(state.scenarioId); render(); }
     });
   }
   function renameScenario(){ if(!sb||!state.scenarioId)return; var cur=(scenarios.filter(function(s){return s.id===state.scenarioId;})[0]||{}).nombre||"";
@@ -707,35 +708,43 @@
     else prompt("Copia el enlace:",link);
   }
   function renderPresence(names){ var e=$("#presence"); if(!e)return; e.innerHTML="";
-    names.forEach(function(n){var s=document.createElement("span");s.className="pchip"+(n===myName?" me":"");s.textContent=n||"—";e.appendChild(s);});
+    var uniq=[]; names.forEach(function(n){if(uniq.indexOf(n)<0)uniq.push(n);});
+    var cnt=document.createElement("span");cnt.className="pcount";cnt.textContent="👥 "+uniq.length+(uniq.length===1?" en el escenario":" en el escenario");e.appendChild(cnt);
+    uniq.forEach(function(n){var s=document.createElement("span");s.className="pchip"+(n===myName?" me":"");s.textContent=n||"—";e.appendChild(s);});
   }
   function ensureName(){ if(!myName){ myName=(prompt("¿Cómo te llamas? (para la sala compartida)","")||"Invitado").slice(0,24); localStorage.setItem("gs_name",myName); }
     var nb=$("#nameBtn"); if(nb)nb.textContent="👤 "+myName;
   }
-  function subscribe(){ if(!sb)return;
-    chan=sb.channel("gransol_room",{config:{presence:{key:clientId}}});
-    chan.on("postgres_changes",{event:"*",schema:"public",table:"gransol_escenarios"},function(payload){
+  var listChan=null, roomChan=null, roomJoined=false;
+  function subscribeList(){ if(!sb||listChan)return;
+    listChan=sb.channel("gransol_list");
+    listChan.on("postgres_changes",{event:"*",schema:"public",table:"gransol_escenarios"},function(p){
       fetchScenarios();
-      if(payload.eventType==="UPDATE"&&payload.new&&payload.new.id===state.scenarioId){
-        var est=payload.new.estado;
-        if(est&&est._c!==clientId){
-          if(Date.now()-lastEditAt>2500){ applyingRemote=true; applyEstado(est); applyingRemote=false; render(); setStatus("Actualizado por "+(payload.new.actualizado_por||"otro")); }
-          else pendingRemote=est;
-        }
-      }
-      if(payload.eventType==="DELETE"&&payload.old&&payload.old.id===state.scenarioId){ state.scenarioId=null; setStatus("Escenario borrado"); }
+      if(p.eventType==="DELETE"&&p.old&&p.old.id===state.scenarioId) setStatus("Escenario borrado");
     });
-    chan.on("presence",{event:"sync"},function(){ var st=chan.presenceState(); var names={};
-      Object.keys(st).forEach(function(k){(st[k]||[]).forEach(function(p){if(p.name)names[p.name]=true;});});
-      renderPresence(Object.keys(names)); });
-    chan.on("broadcast",{event:"cursor"},function(m){var p=m.payload;if(!p||p.id===clientId)return;
-      cursors[p.id]={name:p.name,x:p.x,y:p.y,color:p.color,t:Date.now()};renderCursors();});
-    chan.subscribe(function(status){ if(status==="SUBSCRIBED"){ joined=true; chan.track({name:myName}); } });
+    listChan.subscribe();
     var lastSent=0;
-    window.addEventListener("mousemove",function(e){var now=Date.now();if(now-lastSent<55||!joined)return;lastSent=now;
-      chan.send({type:"broadcast",event:"cursor",payload:{id:clientId,name:myName,color:myColor,x:e.clientX/window.innerWidth,y:e.clientY/window.innerHeight}});});
+    window.addEventListener("mousemove",function(e){var now=Date.now();if(now-lastSent<55||!roomJoined||!roomChan)return;lastSent=now;
+      roomChan.send({type:"broadcast",event:"cursor",payload:{id:clientId,name:myName,color:myColor,x:e.clientX/window.innerWidth,y:e.clientY/window.innerHeight}});});
     setInterval(function(){ renderCursors();
       if(pendingRemote&&Date.now()-lastEditAt>2500){ var est=pendingRemote;pendingRemote=null; applyingRemote=true; applyEstado(est); applyingRemote=false; render(); setStatus("Actualizado ✓"); } },1500);
+  }
+  function joinRoom(id){ if(!sb)return;
+    if(roomChan){ try{sb.removeChannel(roomChan);}catch(e){} roomChan=null; roomJoined=false; }
+    cursors={}; var box=$("#cursors"); if(box)box.innerHTML=""; renderPresence([]);
+    roomChan=sb.channel("gransol_scn_"+id,{config:{presence:{key:clientId}}});
+    roomChan.on("postgres_changes",{event:"UPDATE",schema:"public",table:"gransol_escenarios",filter:"id=eq."+id},function(p){
+      var est=p.new&&p.new.estado; if(est&&est._c!==clientId){
+        if(Date.now()-lastEditAt>2500){ applyingRemote=true; applyEstado(est); applyingRemote=false; render(); setStatus("Actualizado por "+(p.new.actualizado_por||"otro")); }
+        else pendingRemote=est;
+      }
+    });
+    roomChan.on("presence",{event:"sync"},function(){ var st=roomChan.presenceState(); var names=[];
+      Object.keys(st).forEach(function(k){(st[k]||[]).forEach(function(pp){if(pp.name)names.push(pp.name);});});
+      renderPresence(names); });
+    roomChan.on("broadcast",{event:"cursor"},function(m){var p=m.payload;if(!p||p.id===clientId)return;
+      cursors[p.id]={name:p.name,x:p.x,y:p.y,color:p.color,t:Date.now()};renderCursors();});
+    roomChan.subscribe(function(status){ if(status==="SUBSCRIBED"){ roomJoined=true; roomChan.track({name:myName}); } });
   }
 
   // ---- Init UI ----
@@ -752,7 +761,7 @@
   $("#scenRen").addEventListener("click",renameScenario);
   $("#scenDel").addEventListener("click",delScenario);
   $("#scenShare").addEventListener("click",shareLink);
-  $("#nameBtn").addEventListener("click",function(){var n=prompt("Tu nombre en la sala:",myName);if(n){myName=n.slice(0,24);localStorage.setItem("gs_name",myName);$("#nameBtn").textContent="👤 "+myName;if(chan)chan.track({name:myName});}});
+  $("#nameBtn").addEventListener("click",function(){var n=prompt("Tu nombre en la sala:",myName);if(n){myName=n.slice(0,24);localStorage.setItem("gs_name",myName);$("#nameBtn").textContent="👤 "+myName;if(roomChan)roomChan.track({name:myName});}});
   $("#noct").checked=state.noct;
   $("#noct").addEventListener("change",function(){state.noct=this.checked;render();});
 
@@ -816,8 +825,8 @@
         if(want&&scenarios.some(function(s){return s.id===want;})) selectScenario(want);
         else if(scenarios.length) selectScenario(scenarios[0].id);
         else newScenario("Escenario base",true);
-        subscribe();
       }
+      subscribeList();
       if(myName){ $("#nameBtn").textContent="👤 "+myName; myColor=colorFor(clientId); proceed(); }
       else showGate(proceed);
     });
