@@ -695,7 +695,7 @@
       try{cb();}catch(e){render();}}
     function buildChips(list){chips.innerHTML="";list.forEach(function(n){if(!n)return;var b=document.createElement("button");b.type="button";b.textContent=n;b.addEventListener("click",function(){finish(n);});chips.appendChild(b);});}
     buildChips(knownNames());
-    if(sb){ sb.from("gransol_escenarios").select("creado_por,actualizado_por").then(function(res){ if(res&&res.data){var set={};res.data.forEach(function(r){if(r.creado_por)set[r.creado_por]=1;if(r.actualizado_por)set[r.actualizado_por]=1;});buildChips(Object.keys(set));} }); }
+    if(sb){ sb.from("gransol_participantes").select("nombre").order("last_seen",{ascending:false}).then(function(res){ if(res&&res.data){buildChips(res.data.map(function(r){return r.nombre;}));} }); }
     $("#gateGo").onclick=function(){finish();};
     inp.onkeydown=function(e){if(e.key==="Enter")finish();};
     g.hidden=false;g.style.display="flex";setTimeout(function(){try{inp.focus();}catch(e){}},60);
@@ -734,6 +734,7 @@
     sb.from("gransol_escenarios").update({estado:snapEstado(),actualizado_por:myName,updated_at:new Date().toISOString()}).eq("id",state.scenarioId)
       .then(function(res){ setStatus(res&&res.error?"Error al guardar":"Guardado ✓"); });
   }
+  function registerMe(){ if(!sb||!myName)return; try{ sb.from("gransol_participantes").upsert({nombre:myName,last_seen:new Date().toISOString()},{onConflict:"nombre"}).then(function(){}); }catch(e){} }
   function fetchScenarios(){ if(!sb)return Promise.resolve();
     return sb.from("gransol_escenarios").select("id,nombre,updated_at,actualizado_por,creado_por").order("updated_at",{ascending:false})
       .then(function(res){ if(res&&!res.error){ scenarios=res.data||[]; renderScenSelect(); } return scenarios; });
@@ -820,7 +821,7 @@
   $("#scenRen").addEventListener("click",renameScenario);
   $("#scenDel").addEventListener("click",delScenario);
   $("#scenShare").addEventListener("click",shareLink);
-  $("#nameBtn").addEventListener("click",function(){var n=prompt("Tu nombre en la sala:",myName);if(n){myName=n.slice(0,24);localStorage.setItem("gs_name",myName);$("#nameBtn").textContent="👤 "+myName;if(roomChan)roomChan.track({name:myName});}});
+  $("#nameBtn").addEventListener("click",function(){var n=prompt("Tu nombre en la sala:",myName);if(n){myName=n.slice(0,24);localStorage.setItem("gs_name",myName);$("#nameBtn").textContent="👤 "+myName;registerMe();if(roomChan)roomChan.track({name:myName});}});
   $("#noct").checked=state.noct;
   $("#noct").addEventListener("change",function(){state.noct=this.checked;render();});
   [["ecBajo","bajo"],["ecBase","base"],["ecAlto","alto"]].forEach(function(p){var el=$("#"+p[0]);
@@ -882,6 +883,7 @@
   function afterName(){
     if(!sb){ setStatus("sin conexión (modo local)"); render(); return; }
     setStatus("conectando…");
+    registerMe();
     fetchScenarios().then(function(){
       subscribeList();
       var want=(new URLSearchParams(location.search)).get("scn")||localStorage.getItem("gs_active");
