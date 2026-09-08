@@ -191,6 +191,13 @@
   .econgrid input{font-family:var(--mono);font-weight:600}
   .econreadout{margin-top:12px;font-size:13px;color:var(--ink);background:var(--panel-2);border-radius:9px;padding:9px 12px}
   .econreadout b{color:var(--accent)}
+  .dptbl{width:100%;border-collapse:collapse;font-size:12.5px}
+  .dptbl th,.dptbl td{text-align:right;padding:5px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;font-family:var(--mono)}
+  .dptbl th:first-child,.dptbl td:first-child{text-align:left;font-family:var(--sans)}
+  .dptbl th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);font-weight:700}
+  .dptbl tr.best td{background:var(--ok-bg);color:var(--ok);font-weight:700}
+  .dptbl tr.zero td{opacity:.5}
+  .dpwrap{overflow-x:auto}
 
   /* portada de nombre */
   .gate{position:fixed;inset:0;background:rgba(20,15,8,.55);backdrop-filter:blur(4px);z-index:80;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -288,6 +295,16 @@
         <label>Gastos operativos, sin personal (€/mes)<input type="number" id="ecOpex" min="0" step="50"></label>
       </div>
       <div class="econreadout" id="econReadout"></div>
+      <h4 style="color:var(--ink);margin:16px 0 6px;font-size:13.5px">Rentabilidad por franja horaria</h4>
+      <p class="schednote">Pon lo que estimáis ganar al mes por franja. La <b>preparación de la mañana</b> se imputa a <b>Comida</b> y la de <b>entre servicios/tarde</b> a <b>Cena</b>. Desayuno y Tardeo no tienen turnos asignados todavía (coste de personal 0 hasta que abráis franjas ahí).</p>
+      <div class="econgrid">
+        <label>Ventas Desayuno (€/mes)<input type="number" id="dpDes" min="0" step="100"></label>
+        <label>Ventas Comida (€/mes)<input type="number" id="dpCom" min="0" step="100"></label>
+        <label>Ventas Tardeo (€/mes)<input type="number" id="dpTar" min="0" step="100"></label>
+        <label>Ventas Cena (€/mes)<input type="number" id="dpCen" min="0" step="100"></label>
+      </div>
+      <div id="dpTable" style="margin-top:12px"></div>
+      <button class="btn ghost sm" id="dpUseBase" style="margin-top:8px">Usar la suma de franjas como Ventas Base</button>
     </div>
   </details>
 
@@ -390,7 +407,7 @@
   var OPEX=5220, MARGEN=0.687;
 
   var state={workers:[], assign:{}, open:{}, times:{}, scenario:"base", noct:true, brush:null, seq:1, scenarioId:null,
-    econ:{bajo:15574,base:28013,alto:44125,margen:0.687,opex:5220}};
+    econ:{bajo:15574,base:28013,alto:44125,margen:0.687,opex:5220,dp:{desayuno:0,comida:15000,tardeo:0,cena:13013}}};
   SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});
   function active(s){return state.open[s.id]===true;}
   function totalSvcH(){var t=0;SVC.forEach(function(s){if(active(s))t+=s.need*s.h;});return t;}
@@ -637,6 +654,35 @@
     function eb(k){return Math.round(state.econ[k]*state.econ.margen - personal - state.econ.opex);}
     var ro=$("#econReadout");if(ro)ro.innerHTML="Con el coste de personal actual ("+eur(personal)+"/mes) y margen "+(state.econ.margen*100).toFixed(1)+"% — EBITDA estimado: <b>Bajo</b> "+eur(eb("bajo"))+" · <b>Base</b> "+eur(eb("base"))+" · <b>Alto</b> "+eur(eb("alto"))+" al mes.";
     var es=$("#econSummary");if(es)es.textContent="Base "+eur(state.econ.base)+"/mes · margen "+(state.econ.margen*100).toFixed(0)+"%";
+    renderDaypart();
+  }
+  function laborByDaypart(){
+    var dp={desayuno:0,comida:0,tardeo:0,cena:0};
+    var wh={}; SHIFTS.forEach(function(s){if(!active(s))return;state.assign[s.id].forEach(function(e){wh[e.w]=(wh[e.w]||0)+e.h;});});
+    SHIFTS.forEach(function(s){ if(!active(s))return;
+      var suf=s.id.split("_").pop(); var d=(suf==="no"||suf==="ent")?"cena":"comida"; // pre+md→Comida, ent+no→Cena
+      var nprop=noctOf(s.st,s.en)/s.h;
+      state.assign[s.id].forEach(function(e){ var w=getW(e.w); if(!w)return; var c;
+        if(w.jornada==="FIJO_COMPLETO"){ var tot=wh[w.id]||1; c=wMonthly(w)*(e.h/tot); }
+        else { var r=wRate(w); c=(e.h*r+(state.noct?(nprop*e.h)*r*0.25:0))*SEM_M; }
+        dp[d]+=c; });
+    });
+    return dp;
+  }
+  function renderDaypart(){
+    var map={dpDes:"desayuno",dpCom:"comida",dpTar:"tardeo",dpCen:"cena"};
+    Object.keys(map).forEach(function(id){var el=$("#"+id);if(el&&el!==document.activeElement)el.value=state.econ.dp[map[id]];});
+    var lab=laborByDaypart(), m=state.econ.margen;
+    var defs=[["desayuno","Desayuno"],["comida","Comida"],["tardeo","Tardeo"],["cena","Cena"]];
+    var rows=defs.map(function(p){var v=state.econ.dp[p[0]]||0,prod=v*(1-m),per=lab[p[0]]||0;return {k:p[0],lab:p[1],v:v,prod:prod,per:per,c:v-prod-per,pct:v>0?(v-prod-per)/v*100:0};});
+    var best=null;rows.forEach(function(r){if(r.v>0&&(!best||r.c>best.c))best=r;});
+    var sum=function(f){return rows.reduce(function(a,r){return a+f(r);},0);};
+    var html='<div class="dpwrap"><table class="dptbl"><tr><th>Franja</th><th>Ventas</th><th>Producto</th><th>Personal</th><th>Contribución</th><th>%</th></tr>';
+    rows.forEach(function(r){var cls=r.v<=0?"zero":((best&&r.k===best.k)?"best":"");
+      html+='<tr class="'+cls+'"><td>'+((best&&r.k===best.k)?"★ ":"")+r.lab+'</td><td>'+eur(r.v)+'</td><td>'+eur(r.prod)+'</td><td>'+eur(r.per)+'</td><td>'+eur(r.c)+'</td><td>'+(r.v>0?r.pct.toFixed(0)+"%":"—")+'</td></tr>';});
+    html+='<tr style="font-weight:700"><td>Total</td><td>'+eur(sum(function(r){return r.v;}))+'</td><td>'+eur(sum(function(r){return r.prod;}))+'</td><td>'+eur(sum(function(r){return r.per;}))+'</td><td>'+eur(sum(function(r){return r.c;}))+'</td><td></td></tr></table></div>';
+    if(best)html+='<div class="econreadout" style="margin-top:8px">Franja más rentable por margen de contribución: <b>'+best.lab+'</b> ('+eur(best.c)+"/mes). Nota: el coste de personal de cada franja incluye la preparación imputada (mañana→Comida, tarde→Cena).</div>";
+    var t=$("#dpTable");if(t)t.innerHTML=html;
   }
   function kpi(l,v,s){return '<div class="kpi"><div class="lab">'+l+'</div><div class="val">'+v+'</div><div class="sub">'+(s||"")+'</div></div>';}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -717,7 +763,8 @@
     if(!o)return;
     state.workers=Array.isArray(o.workers)?o.workers:[];
     state.scenario=SCEN[o.scenario]?o.scenario:"base";
-    var e=o.econ||{}; state.econ={bajo:+e.bajo||15574,base:+e.base||28013,alto:+e.alto||44125,margen:(e.margen!=null&&!isNaN(+e.margen)?+e.margen:0.687),opex:(e.opex!=null&&!isNaN(+e.opex)?+e.opex:5220)};
+    var e=o.econ||{}; var dp=e.dp||{}; state.econ={bajo:+e.bajo||15574,base:+e.base||28013,alto:+e.alto||44125,margen:(e.margen!=null&&!isNaN(+e.margen)?+e.margen:0.687),opex:(e.opex!=null&&!isNaN(+e.opex)?+e.opex:5220),
+      dp:{desayuno:+dp.desayuno||0,comida:(dp.comida!=null&&!isNaN(+dp.comida)?+dp.comida:15000),tardeo:+dp.tardeo||0,cena:(dp.cena!=null&&!isNaN(+dp.cena)?+dp.cena:13013)}};
     state.noct=o.noct!==false; state.seq=o.seq||(state.workers.length+1);
     state.times={}; if(o.times)Object.keys(o.times).forEach(function(k){var t=o.times[k];if(t&&typeof t.st==="number"&&typeof t.en==="number")state.times[k]={st:t.st,en:t.en};});
     SHIFTS.forEach(function(s){
@@ -828,6 +875,9 @@
     el.addEventListener("change",function(){var v=parseFloat(el.value);if(!isNaN(v)&&v>=0){state.econ[p[1]]=Math.round(v);render();}});});
   $("#ecMargen").addEventListener("change",function(){var v=parseFloat($("#ecMargen").value);if(!isNaN(v)&&v>=0&&v<=100){state.econ.margen=v/100;render();}});
   $("#ecOpex").addEventListener("change",function(){var v=parseFloat($("#ecOpex").value);if(!isNaN(v)&&v>=0){state.econ.opex=Math.round(v);render();}});
+  [["dpDes","desayuno"],["dpCom","comida"],["dpTar","tardeo"],["dpCen","cena"]].forEach(function(p){var el=$("#"+p[0]);
+    el.addEventListener("change",function(){var v=parseFloat(el.value);if(!isNaN(v)&&v>=0){state.econ.dp[p[1]]=Math.round(v);render();}});});
+  $("#dpUseBase").addEventListener("click",function(){var d=state.econ.dp;state.econ.base=Math.round((d.desayuno||0)+(d.comida||0)+(d.tardeo||0)+(d.cena||0));render();});
 
   var sc=$("#scenario");Object.keys(SCEN).forEach(function(k){var b=document.createElement("button");
     b.textContent=SCEN[k].lab;b.className=state.scenario===k?"on":"";b.setAttribute("aria-pressed",state.scenario===k);
