@@ -42,7 +42,6 @@
     -webkit-font-smoothing:antialiased;font-size:15px}
   .wrap{max-width:1180px;margin:0 auto;padding:20px 20px 80px}
   h1,h2,h3{margin:0;text-wrap:balance}
-  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
   .muted{color:var(--ink-soft)}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
   .btn{background:var(--accent);color:var(--accent-ink);border-radius:9px;padding:9px 15px;font-weight:650;
@@ -64,7 +63,6 @@
   .brand .loc{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
   .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
-  /* barra de escenarios (sala compartida) */
   .scenbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);
     border-radius:12px;padding:10px 12px;margin-bottom:18px;box-shadow:var(--shadow)}
   .scenbar .scenlab{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);font-weight:700}
@@ -83,7 +81,6 @@
   .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700}
   .pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)}
   .pill.bad{background:var(--bad-bg);color:var(--bad)}
-  .stars{color:var(--accent);letter-spacing:2px}
 
   .grid2{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
@@ -123,12 +120,10 @@
   .slot:hover{border-color:var(--accent);border-style:solid}
   .slot.full{border-style:solid;border-color:var(--ok)}
   .slot.under{border-color:var(--bad)}
-  .slot.peak{background:linear-gradient(0deg,var(--accent-soft),transparent 70%)}
-  .slot .sh{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--ink-soft);margin-bottom:5px}
+  .slot .sh{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--ink-soft);margin-bottom:5px;flex-wrap:wrap}
   .slot .sh .fr{font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.03em}
   .slot .cnt{font-family:var(--mono);font-weight:700;font-size:9.5px}
   .slot .cnt.ok{color:var(--ok)} .slot .cnt.no{color:var(--bad)}
-  .peakflag{font-size:8.5px;background:var(--accent);color:var(--accent-ink);border-radius:4px;padding:1px 4px;font-weight:800;letter-spacing:.04em}
   .chips{display:flex;flex-wrap:wrap;gap:4px;min-height:22px}
   .chip{font-size:11px;padding:2px 6px;border-radius:6px;color:#fff;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:4px}
   .chip .hin{width:38px;border:none;background:rgba(255,255,255,.28);color:#fff;border-radius:4px;padding:1px 2px;font-size:10px;
@@ -144,23 +139,11 @@
   .slot.prep .fr{color:var(--ink-soft)}
   .slot.prep.full{border-color:var(--line);border-style:dashed}
 
-  .verdict{margin-top:20px}
-  .vhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .vstate{font-size:22px;font-weight:850;text-transform:uppercase;letter-spacing:-.01em}
-  .vscore{font-family:var(--mono);font-size:15px}
-  .msg{border-left:3px solid var(--accent);padding:9px 14px;margin-top:12px;background:var(--panel-2);border-radius:0 9px 9px 0}
-  .msg .who{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
-  .msg p{margin:3px 0 0;font-size:14px}
-  .warns{margin-top:12px;display:flex;flex-direction:column;gap:6px}
-  .warn-item{font-size:12.5px;background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:7px 11px}
-  .warn-item.hard{background:var(--bad-bg);color:var(--bad)}
-  .warn-item b{font-weight:750}
   details.adv{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   details.adv summary{padding:13px 16px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;display:flex;justify-content:space-between}
   details.adv summary::-webkit-details-marker{display:none}
   details.adv .bd{padding:0 16px 16px;font-size:13.5px;color:var(--ink-soft)}
   details.adv h4{color:var(--ink);margin:12px 0 4px;font-size:13.5px}
-  details.adv code{font-family:var(--mono);background:var(--panel-2);padding:1px 5px;border-radius:5px;font-size:12px}
   .foot{margin-top:26px;font-size:11.5px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:12px;max-width:80ch}
   .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
   .seg button{padding:7px 12px;font-size:12.5px;font-weight:650;color:var(--ink-soft)}
@@ -170,22 +153,30 @@
 
   details.adv.sched{margin-top:0;margin-bottom:20px}
   .schednote{margin:0 0 12px;font-size:12.5px;color:var(--ink-soft)}
-  .schedgrid{display:flex;flex-direction:column;gap:8px}
-  .schedrow{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center}
   .schedday{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
-  .schedbands{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-  @media(max-width:640px){.schedbands{grid-template-columns:repeat(2,1fr)}}
-  .bandcell{border:1px solid var(--line);border-radius:8px;padding:5px 6px;background:var(--panel-2);opacity:.6;transition:all .12s}
-  .bandcell.on{opacity:1}
-  .bandcell:hover{border-color:var(--accent)}
-  .bandtog2{display:flex;flex-direction:column;align-items:flex-start;gap:0;width:100%;text-align:left;padding:1px 2px}
-  .bandtog2 span{font-size:11.5px;font-weight:700;color:var(--ink)}
-  .bandcell.on .bandtog2 span{color:var(--accent)}
-  .bandtog2 small{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}
-  .tw{display:flex;align-items:center;gap:3px;margin-top:4px}
-  .tin{width:100%;padding:2px 3px;font-size:10.5px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);font-family:var(--mono)}
   .tsep{color:var(--ink-soft);font-size:10px}
-  /* editar escenario (económico) */
+
+  /* paleta de franjas + editor por día */
+  .palette{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px}
+  .ptype{display:inline-flex;flex-direction:column;border:1px solid var(--line);border-radius:9px;padding:5px 10px;background:var(--panel-2);cursor:grab;user-select:none}
+  .ptype:hover{border-color:var(--accent)}
+  .ptype.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .ptype b{font-size:12px;font-weight:700}
+  .ptype small{font-size:9px;font-family:var(--mono);opacity:.85}
+  .ptype.prep{border-style:dashed}
+  .schedrow2{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:start;margin-bottom:8px}
+  .dayzone{display:flex;flex-wrap:wrap;gap:6px;min-height:46px;border:1px dashed var(--line);border-radius:9px;padding:6px}
+  .dayzone.armed{border-color:var(--accent);background:var(--accent-soft)}
+  .dayzone .addhere{font-size:11px;color:var(--accent);font-weight:700;align-self:center;cursor:pointer;padding:4px 8px;border:1px dashed var(--accent);border-radius:7px}
+  .inst{border:1px solid var(--line);border-radius:8px;padding:5px 7px;background:var(--panel);min-width:118px}
+  .inst.prep{border-style:dashed;background:repeating-linear-gradient(45deg,var(--panel),var(--panel) 6px,var(--panel-2) 6px,var(--panel-2) 12px)}
+  .inst .ihd{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--ink)}
+  .inst .ix{color:var(--ink-soft);cursor:pointer;font-weight:800;font-size:14px}
+  .inst .ix:hover{color:var(--bad)}
+  .inst .irow{display:flex;align-items:center;gap:3px;margin-top:3px}
+  .inst .tin{width:100%;padding:2px 3px;font-size:10.5px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);font-family:var(--mono)}
+  .inst .needin{width:40px;text-align:center;font-family:var(--mono);font-size:10.5px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);padding:1px}
+
   .econgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
   .econgrid label{display:flex;flex-direction:column;gap:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);font-weight:600}
   .econgrid input{font-family:var(--mono);font-weight:600}
@@ -199,7 +190,6 @@
   .dptbl tr.zero td{opacity:.5}
   .dpwrap{overflow-x:auto}
 
-  /* portada de nombre */
   .gate{position:fixed;inset:0;background:rgba(20,15,8,.55);backdrop-filter:blur(4px);z-index:80;display:flex;align-items:center;justify-content:center;padding:20px}
   .gate[hidden]{display:none!important}
   .gatebox{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);max-width:420px;width:100%;padding:22px}
@@ -209,12 +199,10 @@
   .gatechips button{font-size:12.5px;font-weight:650;border:1px solid var(--line);border-radius:20px;padding:4px 11px;background:var(--panel-2);color:var(--ink)}
   .gatechips button:hover{border-color:var(--accent);color:var(--accent)}
   #gateInput{margin-bottom:10px}
-  /* cursores en vivo */
   #cursors{position:fixed;inset:0;pointer-events:none;z-index:60}
   .rcur{position:fixed;transform:translate(-2px,-2px);transition:left .07s linear,top .07s linear;will-change:left,top}
   .rcur svg{display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
   .rcur .lbl{position:absolute;left:15px;top:13px;font-size:11px;font-weight:700;color:#fff;padding:1px 7px;border-radius:20px;white-space:nowrap}
-  /* móvil */
   @media(max-width:600px){
     .wrap{padding:14px 12px 60px}
     header.top{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:12px}
@@ -229,8 +217,7 @@
     .kpis{grid-template-columns:repeat(2,1fr)}
     .kpi .val{font-size:20px}
     .week{grid-template-columns:repeat(2,1fr)}
-    .schedbands{grid-template-columns:repeat(2,1fr)}
-    .schedrow{grid-template-columns:44px 1fr}
+    .schedrow2{grid-template-columns:44px 1fr}
     .grid2{gap:14px}
     .gatebox{padding:18px}
   }
@@ -252,7 +239,7 @@
     <div class="brand">
       <div class="loc">Cervecería Gran Sol · Ríos Rosas 10, Madrid</div>
       <h1>Monta el <span>Turno</span></h1>
-      <p class="tag">Sala compartida en vivo. Crea escenarios, reparte la semana y cuadra el servicio sin que las nóminas se coman el margen. Lo que toque uno, lo veis todos.</p>
+      <p class="tag">Sala compartida en vivo. Crea franjas, arrástralas a cada día, reparte la plantilla y cuadra el servicio sin que las nóminas se coman el margen.</p>
     </div>
     <div class="toolbar">
       <div class="seg" id="scenario" role="group" aria-label="Escenario de ventas"></div>
@@ -277,9 +264,12 @@
 
   <div class="kpis" id="kpis"></div>
 
-  <details class="adv sched" id="schedWrap">
-    <summary><span>Editar apertura y horas — qué abre cada día</span><span class="muted" id="schedSummary"></span></summary>
-    <div class="bd"><p class="schednote">Pincha el nombre de cada franja para abrirla o cerrarla, y edita las horas de entrada/salida. Puedes tocar mediodía, noche y las dos preparaciones (restaurante cerrado, plantilla trabajando) en cualquier día, incluido el domingo.</p><div class="schedgrid" id="schedBody"></div></div>
+  <details class="adv sched" id="schedWrap" open>
+    <summary><span>Franjas y horario — crea franjas y arrástralas a cada día</span><span class="muted" id="schedSummary"></span></summary>
+    <div class="bd">
+      <p class="schednote">Arrastra una franja de la paleta al día que quieras (o pínchala y luego pincha el día). Cada franja cae con su hora por defecto, y dentro del día editas su hora y sus personas <b>solo para ese día</b>. Puedes poner varias franjas por día y crear franjas nuevas con «+ Crear franja».</p>
+      <div id="schedBody"></div>
+    </div>
   </details>
 
   <details class="adv econ" id="econWrap">
@@ -294,8 +284,8 @@
         <label>Gastos operativos, sin personal (€/mes)<input type="number" id="ecOpex" min="0" step="50"></label>
       </div>
       <div class="econreadout" id="econReadout"></div>
-      <h4 style="color:var(--ink);margin:16px 0 6px;font-size:13.5px">Rentabilidad por franja horaria</h4>
-      <p class="schednote">Pon lo que estimáis ganar al mes por franja. La <b>preparación de la mañana</b> se imputa a <b>Comida</b> y la de <b>entre servicios/tarde</b> a <b>Cena</b>. Desayuno y Tardeo no tienen turnos asignados todavía (coste de personal 0 hasta que abráis franjas ahí).</p>
+      <h4>Rentabilidad por franja horaria</h4>
+      <p class="schednote">Pon lo que estimáis ganar al mes por franja. El coste de personal de cada franja se imputa según a qué daypart pertenece cada turno (incluida la preparación). Marca la más rentable por margen de contribución.</p>
       <div class="econgrid">
         <label>Ventas Desayuno (€/mes)<input type="number" id="dpDes" min="0" step="100"></label>
         <label>Ventas Comida (€/mes)<input type="number" id="dpCom" min="0" step="100"></label>
@@ -328,13 +318,13 @@
     <section class="card">
       <div class="hd">
         <h2>Parrilla semanal de turnos</h2>
-        <span class="muted tnum"><span id="progH">0</span> / <span id="reqH">128</span> h servicio · <span id="prepH">0</span> h prep</span>
+        <span class="muted tnum"><span id="progH">0</span> / <span id="reqH">0</span> h servicio · <span id="prepH">0</span> h prep</span>
       </div>
       <div class="bd"><div class="week" id="week"></div></div>
     </section>
   </div>
 
-  <p class="foot">Horario por defecto tomado de <b>La Castela</b> (Doctor Castelo 22, Madrid): abierto de lunes a sábado, mediodía y noche hasta las 00:30, domingos cerrado. Salen <b>128 h de servicio a la semana</b>. Las franjas de <b>preparación</b> (restaurante cerrado, plantilla trabajando) suman horas y coste pero no cuentan como servicio al cliente. Puedes editar qué abre cada día y sus horas, fijar las horas de cada persona por turno y su coste, y guardar/compartir escenarios en la sala común. Simulacro sobre el modelo de negocio del Gran Sol (coste-hora 12,57 € con SS, encargado + chef 5.068 €/mes, objetivo 30-35 % de personal sobre ventas). Diseñado con los agentes CEO, CFO y CHRO. Los umbrales de coste y la nocturnidad son estimaciones de trabajo, no cifras cerradas: ajústalos con la gestoría. Un buen resultado de plantilla no equivale a caja asegurada: el traspaso y la financiación del proyecto siguen vivos.</p>
+  <p class="foot">Planificador de plantilla del Gran Sol (Ríos Rosas 10, Madrid), sala compartida en vivo. Crea las franjas que quieras (comida, cena, desayuno, tardeo, preparación…), colócalas en cada día con su horario y personas, reparte la plantilla y ajusta ventas, margen y coste por persona. Base del modelo: coste-hora 12,57 € con Seguridad Social, encargado + chef fijos, objetivo 30-35 % de personal sobre ventas. Los umbrales y la nocturnidad son estimaciones de trabajo: ajústalos con la gestoría.</p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -355,35 +345,47 @@
     ayudante_camarero:{lab:"Ayudante de camarero", monthly:1810, rate:12.07, color:"#7A6A9A"},
     extra:{lab:"Extra / por horas", monthly:0, rate:12.57, color:"#9A7B3A"}
   };
-
   var DAYS=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
   var DAYID=["lun","mar","mie","jue","vie","sab","dom"];
-  var SHIFTS=[];
-  DAYS.forEach(function(dn,di){
-    var wknd=(di===4||di===5), sun=(di===6);
-    var mdEn=wknd?17.5:17, mdH=Math.round((mdEn-12.5)*10)/10;
-    var mdNeed=(di<=3)?1:2, noNeed=(di<=3)?3:(sun?2:4), id=DAYID[di];
-    SHIFTS.push({id:id+"_pre",di:di,fr:"Preparación",h:2,st:10.5,en:12.5,need:1,prep:true});
-    SHIFTS.push({id:id+"_md",di:di,fr:"Mediodía",h:mdH,st:12.5,en:mdEn,need:mdNeed});
-    SHIFTS.push({id:id+"_ent",di:di,fr:"Preparación",h:Math.round((20-mdEn)*10)/10,st:mdEn,en:20,need:1,prep:true});
-    SHIFTS.push({id:id+"_no",di:di,fr:"Noche",h:4.5,st:20,en:24.5,need:noNeed,peak:wknd});
-  });
-  var SVC=SHIFTS.filter(function(s){return !s.prep;});
-  var DEFT={}; SHIFTS.forEach(function(s){DEFT[s.id]={st:s.st,en:s.en,h:s.h};});
+  var DPKEYS=["desayuno","comida","tardeo","cena"];
+  var SCEN={bajo:{lab:"Bajo"},base:{lab:"Base"},alto:{lab:"Alto"}};
+
   function noctOf(st,en){return Math.max(0,Math.min(en,30)-Math.max(st,22));} // horas en 22:00-06:00
-  function applyTimes(){SHIFTS.forEach(function(s){var d=DEFT[s.id],t=state.times&&state.times[s.id];
-    s.st=t?t.st:d.st; s.en=t?t.en:d.en; s.h=Math.round((s.en-s.st)*10)/10;
-    if(state.assign&&state.assign[s.id])state.assign[s.id].forEach(function(e){if(e.h>s.h)e.h=s.h;});});}
-  var SHIFT=function(id){for(var i=0;i<SHIFTS.length;i++)if(SHIFTS[i].id===id)return SHIFTS[i];};
+  function round1(x){return Math.round(x*10)/10;}
+  function mkInst(id,di,fr,kind,dp,st,en,need){return {id:id,di:di,fr:fr,kind:(kind==="prep"?"prep":"servicio"),
+    dp:(DPKEYS.indexOf(dp)>=0?dp:"comida"),st:st,en:en,h:round1(en-st),need:Math.max(1,need|0||1)};}
+  function defaultTypes(){return [
+    {t:"comida",fr:"Comida",kind:"servicio",dp:"comida",st:12.5,en:17,need:2},
+    {t:"cena",fr:"Cena",kind:"servicio",dp:"cena",st:20,en:24.5,need:3},
+    {t:"desayuno",fr:"Desayuno",kind:"servicio",dp:"desayuno",st:8,en:12,need:1},
+    {t:"tardeo",fr:"Tardeo",kind:"servicio",dp:"tardeo",st:17,en:20,need:2},
+    {t:"prep_m",fr:"Prep mañana",kind:"prep",dp:"comida",st:10.5,en:12.5,need:1},
+    {t:"prep_t",fr:"Prep tarde",kind:"prep",dp:"cena",st:17,en:20,need:1}
+  ];}
+  function defaultShifts(){ var arr=[];
+    for(var di=0;di<6;di++){ var wknd=(di===4||di===5); var id=DAYID[di];
+      arr.push(mkInst(id+"_md",di,"Comida","servicio","comida",12.5,wknd?17.5:17,(di<=3)?1:2));
+      arr.push(mkInst(id+"_no",di,"Cena","servicio","cena",20,24.5,(di<=3)?3:4));
+    } return arr;
+  }
+  function oldDef(id){ var suf=id.split("_").pop(); var di=DAYID.indexOf(id.split("_")[0]); var wknd=(di===4||di===5);
+    if(suf==="pre")return {fr:"Prep mañana",kind:"prep",dp:"comida",st:10.5,en:12.5,need:1};
+    if(suf==="md")return {fr:"Comida",kind:"servicio",dp:"comida",st:12.5,en:wknd?17.5:17,need:(di<=3)?1:2};
+    if(suf==="ent")return {fr:"Prep tarde",kind:"prep",dp:"cena",st:wknd?17.5:17,en:20,need:1};
+    if(suf==="no")return {fr:"Cena",kind:"servicio",dp:"cena",st:20,en:24.5,need:(di<=3)?3:(di===6?2:4)};
+    return null;
+  }
 
-  var SCEN={bajo:{lab:"Bajo",v:15574},base:{lab:"Base",v:28013},alto:{lab:"Alto",v:44125}};
-  var OPEX=5220, MARGEN=0.687;
-
-  var state={workers:[], assign:{}, open:{}, times:{}, scenario:"base", noct:true, brush:null, seq:1, scenarioId:null,
+  var state={workers:[], assign:{}, shifts:defaultShifts(), types:defaultTypes(),
+    scenario:"base", noct:true, brush:null, brushType:null, seq:1000, scenarioId:null,
     econ:{bajo:15574,base:28013,alto:44125,margen:0.687,opex:5220,dp:{desayuno:0,comida:15000,tardeo:0,cena:13013}}};
-  SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});
-  function active(s){return state.open[s.id]===true;}
-  function totalSvcH(){var t=0;SVC.forEach(function(s){if(active(s))t+=s.need*s.h;});return t;}
+  state.shifts.forEach(function(s){state.assign[s.id]=[];});
+
+  function svcList(){return state.shifts.filter(function(s){return s.kind!=="prep";});}
+  function totalSvcH(){var t=0;svcList().forEach(function(s){t+=s.need*s.h;});return t;}
+  function SHIFT(id){for(var i=0;i<state.shifts.length;i++)if(state.shifts[i].id===id)return state.shifts[i];}
+  function findType(t){for(var i=0;i<state.types.length;i++)if(state.types[i].t===t)return state.types[i];}
+  function typeName(t){var tp=findType(t);return tp?tp.fr:t;}
 
   var $=function(s){return document.querySelector(s);};
   var eur=function(n){return Math.round(n).toLocaleString("es-ES")+" €";};
@@ -391,17 +393,16 @@
   var hm=function(v){if(!/^\d\d?:\d\d$/.test(v))return null;var p=v.split(":");return (+p[0])+(+p[1])/60;};
   var initials=function(n){var p=n.trim().split(/\s+/);return ((p[0]||"?")[0]+(p[1]?p[1][0]:"")).toUpperCase();};
 
-  function entry(sid,wid){var a=state.assign[sid];for(var i=0;i<a.length;i++)if(a[i].w===wid)return a[i];return null;}
-  function slotHours(sid){var t=0;state.assign[sid].forEach(function(e){t+=e.h;});return t;}
+  function entry(sid,wid){var a=state.assign[sid]||[];for(var i=0;i<a.length;i++)if(a[i].w===wid)return a[i];return null;}
+  function slotHours(sid){var t=0;(state.assign[sid]||[]).forEach(function(e){t+=e.h;});return t;}
 
   function workerHours(w){
     var wk=0,no=0,prep=0,days={};
-    SHIFTS.forEach(function(s){
-      if(!active(s))return;
+    state.shifts.forEach(function(s){
       var e=entry(s.id,w.id); if(!e)return;
-      wk+=e.h; no+=(noctOf(s.st,s.en)/s.h)*e.h; days[s.di]=true; if(s.prep)prep+=e.h;
+      wk+=e.h; no+=(noctOf(s.st,s.en)/s.h)*e.h; days[s.di]=true; if(s.kind==="prep")prep+=e.h;
     });
-    return {week:Math.round(wk*10)/10,noct:Math.round(no*10)/10,prep:Math.round(prep*10)/10,days:Object.keys(days).length};
+    return {week:round1(wk),noct:round1(no),prep:round1(prep),days:Object.keys(days).length};
   }
   function wRate(w){return w.rate!=null?w.rate:CATS[w.cat].rate;}
   function wMonthly(w){return w.monthly!=null?w.monthly:CATS[w.cat].monthly;}
@@ -415,82 +416,23 @@
   function compute(){
     var personal=0, progH=0, coveredNeedH=0, prepH=0, fijoH=0, varH=0;
     state.workers.forEach(function(w){personal+=workerCost(w);});
-    SHIFTS.forEach(function(s){
-      if(!active(s))return;
+    state.shifts.forEach(function(s){
       var asg=slotHours(s.id); progH+=asg;
-      if(s.prep){ prepH+=asg; } else { coveredNeedH+=Math.min(asg,s.need*s.h); }
-      state.assign[s.id].forEach(function(e){var w=getW(e.w); if(!w)return;
+      if(s.kind==="prep"){ prepH+=asg; } else { coveredNeedH+=Math.min(asg,s.need*s.h); }
+      (state.assign[s.id]||[]).forEach(function(e){var w=getW(e.w); if(!w)return;
         if(w.jornada==="FIJO_COMPLETO")fijoH+=e.h; else varH+=e.h;});
     });
-    progH=Math.round(progH*10)/10; prepH=Math.round(prepH*10)/10; fijoH=Math.round(fijoH*10)/10; varH=Math.round(varH*10)/10;
+    progH=round1(progH); prepH=round1(prepH); fijoH=round1(fijoH); varH=round1(varH);
     var v=state.econ[state.scenario];
     var pct= personal>0? personal/v*100 : 0;
     var ebitda= v*state.econ.margen - personal - state.econ.opex;
     var tot=totalSvcH();
     var cobertura= tot>0? coveredNeedH/tot : 0;
     var sem= pct<=35?"ok":(pct<=42?"warn":"bad");
-    var cov= cobertura<1? 50*cobertura : 50;
-    var eff;
-    if(pct<=30)eff=50; else if(pct<=35)eff=50-(pct-30)/5*10;
-    else if(pct<=42)eff=40-(pct-35)/7*20; else if(pct<=55)eff=20-(pct-42)/13*20; else eff=0;
-    if(personal===0)eff=0;
-    var score=Math.max(0,Math.round(cov+eff));
-    if(cobertura<1)score=Math.min(score,49);
-    var stars= score>=90?5:score>=75?4:score>=60?3:score>=40?2:1;
     return {personal:personal,pct:pct,ebitda:ebitda,cobertura:cobertura,progH:progH,prepH:prepH,
-      fijoH:fijoH,varH:varH,sem:sem,score:score,stars:stars,v:v};
+      fijoH:fijoH,varH:varH,sem:sem,v:v};
   }
   function getW(id){for(var i=0;i<state.workers.length;i++)if(state.workers[i].id===id)return state.workers[i];}
-
-  function warnings(){
-    var out=[];
-    SVC.forEach(function(s){
-      if(!active(s))return;
-      var asg=slotHours(s.id), req=s.need*s.h;
-      if(asg<req-0.01){var falta=Math.round((req-asg)*10)/10;
-        out.push({hard:!!s.peak,t:"<b>"+DAYS[s.di]+" · "+s.fr+"</b>: faltan "+falta+" h de servicio ("+state.assign[s.id].length+"/"+s.need+" personas)"+(s.peak?" — es el PICO":"")});}
-    });
-    state.workers.forEach(function(w){
-      var h=workerHours(w);
-      if(h.week>40) out.push({hard:true,t:"<b>"+w.name+"</b> tiene "+h.week+" h/semana (máx. 40 h de convenio)"});
-      if(h.days>6) out.push({hard:false,t:"<b>"+w.name+"</b> trabaja "+h.days+" días seguidos (máx. 6)"});
-      var mine=[];
-      SHIFTS.forEach(function(s){if(active(s)&&entry(s.id,w.id))mine.push({a:s.di*24+s.st,b:s.di*24+s.en});});
-      mine.sort(function(x,y){return x.a-y.a;});
-      for(var i=1;i<mine.length;i++){var gap=Math.round((mine[i].a-mine[i-1].b)*10)/10; if(gap>=0&&gap<12){
-        out.push({hard:false,t:"<b>"+w.name+"</b>: solo "+gap+" h de descanso entre dos turnos (mín. 12 h)"});break;}}
-    });
-    return out;
-  }
-
-  function svcShort(s){return slotHours(s.id) < s.need*s.h - 0.01;}
-  function ceoMsg(c){
-    var pico=false,uncovered=0;
-    SVC.forEach(function(s){if(!active(s))return;if(svcShort(s)){uncovered++;if(s.peak)pico=true;}});
-    if(pico) return "Con esta parrilla el finde por la noche revienta: sala llena y sin manos para sacarla. Ahí está la caja de la semana. Móntalo otra vez, que este es mi dinero y el de Antonio.";
-    if(uncovered>0) return "Has dejado "+uncovered+" franja(s) de servicio sin cubrir. El bar no puede dar el servicio que espera el barrio. Cierra los huecos antes de mirar los euros.";
-    if(c.sem==="ok") return "Así se lleva un bar. Todas las franjas cubiertas y el coste donde tiene que estar. El viernes por la noche funciona solo y a fin de mes queda dinero.";
-    if(c.sem==="warn") return "El servicio sale, pero vas justo. O te sobra gente en los mediodías de diario o el coste te está comiendo el margen. Aprieta el lunes y el martes, que ahí no hace falta media plantilla.";
-    return "Has ganado el servicio y perdido el negocio: con esta plantilla el bar trabaja para pagar nóminas.";
-  }
-  function cfoMsg(c){
-    var p=c.pct.toFixed(0);
-    if(c.cobertura<1){var falta=Math.round(totalSvcH()*(1-c.cobertura)*10)/10;
-      return "Servicio sin cubrir: faltan "+falta+" h/semana. Con esta plantilla el Gran Sol no puede dar todos los servicios que ha abierto. Cierra caja antes de mirar el EBITDA.";}
-    if(c.sem==="ok") return "Plantilla ajustada: personal al "+p+" % (dentro del 30-35 % objetivo). EBITDA ~"+eur(c.ebitda)+"/mes. Así se paga el traspaso y la financiación.";
-    if(c.sem==="warn") return "Vas justo: personal al "+p+" %. Cada 1.000 € de más en nómina son 1.000 € menos de EBITDA, y el margen es lo único que paga la financiación del traspaso.";
-    var exc=c.personal-0.35*c.v;
-    return "Te pasas de plantilla: personal al "+p+" %. Te comes ~"+eur(exc)+"/mes de EBITDA ("+eur(exc*12)+"/año). A este ritmo la caja de arranque no aguanta el rodaje.";
-  }
-  function verdict(c){
-    var uncovered=0,peakDown=false;
-    SVC.forEach(function(s){if(active(s)&&svcShort(s)){uncovered++;if(s.peak)peakDown=true;}});
-    if(state.workers.length===0) return {t:"Sin plantilla",cls:"muted"};
-    if(peakDown||uncovered>=2||c.sem==="bad") return {t:"Fracaso",cls:"bad"};
-    if(uncovered===0&&c.sem==="ok") return {t:"Victoria",cls:"ok"};
-    if(uncovered===0&&c.sem==="warn") return {t:"Victoria ajustada",cls:"warn"};
-    return {t:"Casi",cls:"warn"};
-  }
 
   var lastEditAt=0, applyingRemote=false;
   function render(){
@@ -500,10 +442,10 @@
     $("#kpis").innerHTML=
       kpi("Coste de personal",eur(c.personal),"al mes")+
       kpi("% sobre ventas",(c.personal?c.pct.toFixed(1):"—")+" %",'<span class="pill '+c.sem+'">'+semLab+'</span> · '+SCEN[state.scenario].lab)+
-      kpi("Cobertura",Math.round(c.cobertura*100)+" %","del servicio ("+totalSvcH()+" h)")+
+      kpi("Cobertura",Math.round(c.cobertura*100)+" %","del servicio ("+round1(totalSvcH())+" h)")+
       kpi("EBITDA estimado",eur(c.ebitda),"al mes");
-    $("#progH").textContent=Math.round(c.cobertura*totalSvcH()*10)/10;
-    $("#reqH").textContent=totalSvcH();
+    $("#progH").textContent=round1(c.cobertura*totalSvcH());
+    $("#reqH").textContent=round1(totalSvcH());
     $("#prepH").textContent=c.prepH;
     $("#headcount").textContent=state.workers.length+(state.workers.length===1?" persona":" personas");
 
@@ -544,20 +486,20 @@
     DAYS.forEach(function(dn,di){
       var col=document.createElement("div");col.className="day";
       col.innerHTML='<div class="dn">'+dn+'</div>';
-      var dayShifts=SHIFTS.filter(function(s){return s.di===di&&active(s);});
-      if(dayShifts.length===0){col.innerHTML+='<div class="muted" style="font-size:11px;text-align:center;padding:14px 0;line-height:1.3">Cerrado<br><span style="font-size:9px">todo el día</span></div>';}
+      var dayShifts=state.shifts.filter(function(s){return s.di===di;}).sort(function(a,b){return a.st-b.st;});
+      if(dayShifts.length===0){col.innerHTML+='<div class="muted" style="font-size:11px;text-align:center;padding:14px 0;line-height:1.3">Cerrado<br><span style="font-size:9px">sin franjas</span></div>';}
       dayShifts.forEach(function(s){
-        var asg=Math.round(slotHours(s.id)*10)/10, req=s.need*s.h, hc=state.assign[s.id].length;
-        var covered=asg>=req-0.01, armed=state.brush!=null;
+        var asg=round1(slotHours(s.id)), req=round1(s.need*s.h), hc=(state.assign[s.id]||[]).length;
+        var covered=asg>=req-0.01, armed=state.brush!=null, prep=s.kind==="prep";
         var slot=document.createElement("div");
-        slot.className="slot"+(s.prep?" prep":"")+(covered?" full":" under")+(s.peak?" peak":"")+(armed?" armed":"");
-        var timeLab=fmt(s.st)+"-"+fmt(s.en)+(s.prep?" · cerrado":"");
-        slot.innerHTML='<div class="sh"><span class="fr">'+(s.prep?'🔒 ':'')+s.fr+(s.peak?' <span class="peakflag">PICO</span>':'')+'</span>'+
+        slot.className="slot"+(prep?" prep":"")+(covered?" full":" under")+(armed?" armed":"");
+        var timeLab=fmt(s.st)+"-"+fmt(s.en)+(prep?" · cerrado":"");
+        slot.innerHTML='<div class="sh"><span class="fr">'+(prep?'🔒 ':'')+esc(s.fr)+'</span>'+
           '<span class="cnt '+(covered?"ok":"no")+'">'+hc+"/"+s.need+' · '+asg+'/'+req+' h</span>'+
           '<span class="tlab muted">'+timeLab+'</span></div><div class="chips"></div>'+
           '<div class="add">+ '+(armed?"añadir":"pincha 1 persona")+'</div>';
         var chips=slot.querySelector(".chips");
-        state.assign[s.id].forEach(function(e){var w=getW(e.w);if(!w)return;
+        (state.assign[s.id]||[]).forEach(function(e){var w=getW(e.w);if(!w)return;
           var ch=document.createElement("span");ch.className="chip";ch.style.background=CATS[w.cat].color;
           ch.appendChild(document.createTextNode(w.name.split(/\s+/)[0]+" "));
           var inp=document.createElement("input");inp.type="number";inp.className="hin";inp.value=e.h;
@@ -577,35 +519,79 @@
 
     scheduleSync();
   }
+
+  // ---- Editor de franjas (paleta + arrastrar/soltar por día) ----
   function renderEditor(){
     var b=$("#schedBody"); if(!b)return; b.innerHTML="";
-    DAYS.forEach(function(dn,di){
-      var row=document.createElement("div"); row.className="schedrow";
-      row.innerHTML='<div class="schedday">'+dn+'</div>';
-      var wrap=document.createElement("div"); wrap.className="schedbands";
-      SHIFTS.filter(function(s){return s.di===di;}).forEach(function(s){
-        var lbl=s.prep?(s.st<12?"Prep mañana":"Prep tarde"):s.fr;
-        var cell=document.createElement("div"); cell.className="bandcell"+(active(s)?" on":"")+(s.prep?" prep":"");
-        var tog=document.createElement("button"); tog.className="bandtog2";
-        tog.innerHTML='<span>'+(s.prep?"🔒 ":"")+lbl+'</span><small>'+(active(s)?"abierto":"cerrado")+'</small>';
-        tog.addEventListener("click",function(){state.open[s.id]=!active(s);render();});
-        cell.appendChild(tog);
-        var tw=document.createElement("div"); tw.className="tw";
-        var inSt=document.createElement("input");inSt.type="time";inSt.className="tin";inSt.value=fmt(s.st);inSt.title="Entrada";
-        var inEn=document.createElement("input");inEn.type="time";inEn.className="tin";inEn.value=fmt(s.en);inEn.title="Salida";
-        function commit(){var a=hm(inSt.value),bb=hm(inEn.value);if(a==null||bb==null)return;if(bb<=a)bb+=24;if(bb-a<0.5)bb=a+0.5;
-          state.times[s.id]={st:a,en:bb};applyTimes();render();}
-        inSt.addEventListener("change",commit);inEn.addEventListener("change",commit);
-        [inSt,inEn].forEach(function(x){x.addEventListener("click",function(e){e.stopPropagation();});});
-        var sep=document.createElement("span");sep.className="tsep";sep.textContent="–";
-        tw.appendChild(inSt);tw.appendChild(sep);tw.appendChild(inEn);
-        cell.appendChild(tw); wrap.appendChild(cell);
-      });
-      row.appendChild(wrap); b.appendChild(row);
+    var pal=document.createElement("div");pal.className="palette";
+    var plab=document.createElement("span");plab.className="schedday";plab.textContent="Franjas";pal.appendChild(plab);
+    state.types.forEach(function(tp){
+      var el=document.createElement("div");el.className="ptype"+(tp.kind==="prep"?" prep":"")+(state.brushType===tp.t?" on":"");
+      el.setAttribute("draggable","true");
+      el.innerHTML='<b>'+(tp.kind==="prep"?"🔒 ":"")+esc(tp.fr)+'</b><small>'+fmt(tp.st)+"-"+fmt(tp.en)+' · '+tp.need+'p</small>';
+      el.addEventListener("click",function(){state.brushType=state.brushType===tp.t?null:tp.t;renderEditor();});
+      el.addEventListener("dragstart",function(ev){try{ev.dataTransfer.setData("text/plain",tp.t);ev.dataTransfer.effectAllowed="copy";}catch(e){}});
+      pal.appendChild(el);
     });
-    var days=0; DAYS.forEach(function(dn,di){if(SHIFTS.some(function(s){return s.di===di&&active(s);}))days++;});
-    var ss=$("#schedSummary"); if(ss)ss.textContent=days+(days===1?" día abierto · ":" días abiertos · ")+totalSvcH()+" h servicio";
+    var addT=document.createElement("button");addT.className="btn ghost sm";addT.textContent="+ Crear franja";
+    addT.addEventListener("click",createType);pal.appendChild(addT);
+    b.appendChild(pal);
+
+    DAYS.forEach(function(dn,di){
+      var row=document.createElement("div");row.className="schedrow2";
+      row.innerHTML='<div class="schedday">'+dn+'</div>';
+      var zone=document.createElement("div");zone.className="dayzone"+(state.brushType?" armed":"");
+      zone.addEventListener("dragover",function(ev){ev.preventDefault();zone.classList.add("armed");});
+      zone.addEventListener("dragleave",function(){if(!state.brushType)zone.classList.remove("armed");});
+      zone.addEventListener("drop",function(ev){ev.preventDefault();var t="";try{t=ev.dataTransfer.getData("text/plain");}catch(e){}if(t)addInstance(t,di);});
+      var insts=state.shifts.filter(function(s){return s.di===di;}).sort(function(a,b){return a.st-b.st;});
+      insts.forEach(function(s){zone.appendChild(instCard(s));});
+      if(state.brushType){var ah=document.createElement("span");ah.className="addhere";ah.textContent="＋ "+typeName(state.brushType)+" aquí";
+        ah.addEventListener("click",function(){addInstance(state.brushType,di);});zone.appendChild(ah);}
+      else if(!insts.length){var em=document.createElement("span");em.className="muted";em.style.fontSize="11px";em.style.alignSelf="center";em.textContent="Cerrado — arrastra o pincha una franja";zone.appendChild(em);}
+      row.appendChild(zone);b.appendChild(row);
+    });
+    var ss=$("#schedSummary"); if(ss)ss.textContent=state.shifts.length+" franjas · "+round1(totalSvcH())+" h servicio";
   }
+  function instCard(s){
+    var prep=s.kind==="prep";
+    var c=document.createElement("div");c.className="inst"+(prep?" prep":"");
+    var hd=document.createElement("div");hd.className="ihd";
+    var nm=document.createElement("span");nm.textContent=(prep?"🔒 ":"")+s.fr;hd.appendChild(nm);
+    var x=document.createElement("span");x.className="ix";x.textContent="×";x.title="Quitar franja";
+    x.addEventListener("click",function(){removeInstance(s.id);});hd.appendChild(x);
+    c.appendChild(hd);
+    var r=document.createElement("div");r.className="irow";
+    var inSt=document.createElement("input");inSt.type="time";inSt.className="tin";inSt.value=fmt(s.st);inSt.title="Entrada";
+    var inEn=document.createElement("input");inEn.type="time";inEn.className="tin";inEn.value=fmt(s.en);inEn.title="Salida";
+    function commit(){var a=hm(inSt.value),bb=hm(inEn.value);if(a==null||bb==null)return;if(bb<=a)bb+=24;if(bb-a<0.5)bb=a+0.5;setShiftTime(s.id,a,bb);}
+    inSt.addEventListener("change",commit);inEn.addEventListener("change",commit);
+    var sep=document.createElement("span");sep.className="tsep";sep.textContent="–";
+    r.appendChild(inSt);r.appendChild(sep);r.appendChild(inEn);c.appendChild(r);
+    var r2=document.createElement("div");r2.className="irow";
+    var need=document.createElement("input");need.type="number";need.className="needin";need.min="1";need.step="1";need.value=s.need;
+    need.addEventListener("change",function(){var v=parseInt(need.value,10);if(v>=1)setShiftNeed(s.id,v);});
+    var lbl=document.createElement("span");lbl.className="muted";lbl.style.fontSize="10px";lbl.textContent="personas · "+s.h+" h";
+    r2.appendChild(need);r2.appendChild(lbl);c.appendChild(r2);
+    return c;
+  }
+  function addInstance(t,di){var tp=findType(t);if(!tp)return;var id="s"+(state.seq++);
+    state.shifts.push(mkInst(id,di,tp.fr,tp.kind,tp.dp,tp.st,tp.en,tp.need));state.assign[id]=[];render();}
+  function removeInstance(id){state.shifts=state.shifts.filter(function(s){return s.id!==id;});delete state.assign[id];render();}
+  function setShiftTime(id,st,en){var s=SHIFT(id);if(!s)return;s.st=st;s.en=en;s.h=round1(en-st);
+    (state.assign[id]||[]).forEach(function(e){if(e.h>s.h)e.h=s.h;});render();}
+  function setShiftNeed(id,n){var s=SHIFT(id);if(s){s.need=Math.max(1,n);render();}}
+  function createType(){
+    var name=prompt("Nombre de la franja (p. ej. Desayuno, Brunch, Comida):");if(!name)return;
+    var kind=confirm("¿Es SERVICIO al cliente?\n\nAceptar = servicio · Cancelar = preparación (cerrado, plantilla trabajando)")?"servicio":"prep";
+    var dp=(prompt("Daypart para rentabilidad — escribe: desayuno, comida, tardeo o cena","comida")||"comida").toLowerCase();
+    if(DPKEYS.indexOf(dp)<0)dp="comida";
+    var st=hm(prompt("Hora de entrada (HH:MM)","12:00")||"");var en=hm(prompt("Hora de salida (HH:MM)","17:00")||"");
+    if(st==null||en==null){alert("Horas no válidas.");return;} if(en<=st)en+=24;
+    var need=parseInt(prompt("Personas necesarias","1")||"1",10);if(!(need>=1))need=1;
+    state.types.push({t:"tp"+(state.seq++),fr:name.slice(0,24),kind:kind,dp:dp,st:st,en:en,need:need});renderEditor();
+  }
+
   function renderEcon(){
     var map={ecBajo:"bajo",ecBase:"base",ecAlto:"alto"};
     Object.keys(map).forEach(function(id){var el=$("#"+id);if(el&&el!==document.activeElement)el.value=state.econ[map[id]];});
@@ -619,14 +605,13 @@
   }
   function laborByDaypart(){
     var dp={desayuno:0,comida:0,tardeo:0,cena:0};
-    var wh={}; SHIFTS.forEach(function(s){if(!active(s))return;state.assign[s.id].forEach(function(e){wh[e.w]=(wh[e.w]||0)+e.h;});});
-    SHIFTS.forEach(function(s){ if(!active(s))return;
-      var suf=s.id.split("_").pop(); var d=(suf==="no"||suf==="ent")?"cena":"comida"; // pre+md→Comida, ent+no→Cena
+    var wh={}; state.shifts.forEach(function(s){(state.assign[s.id]||[]).forEach(function(e){wh[e.w]=(wh[e.w]||0)+e.h;});});
+    state.shifts.forEach(function(s){ var d=s.dp; if(DPKEYS.indexOf(d)<0)d="comida";
       var nprop=noctOf(s.st,s.en)/s.h;
-      state.assign[s.id].forEach(function(e){ var w=getW(e.w); if(!w)return; var c;
-        if(w.jornada==="FIJO_COMPLETO"){ var tot=wh[w.id]||1; c=wMonthly(w)*(e.h/tot); }
-        else { var r=wRate(w); c=(e.h*r+(state.noct?(nprop*e.h)*r*0.25:0))*SEM_M; }
-        dp[d]+=c; });
+      (state.assign[s.id]||[]).forEach(function(e){ var w=getW(e.w); if(!w)return; var cst;
+        if(w.jornada==="FIJO_COMPLETO"){ var tot=wh[w.id]||1; cst=wMonthly(w)*(e.h/tot); }
+        else { var r=wRate(w); cst=(e.h*r+(state.noct?(nprop*e.h)*r*0.25:0))*SEM_M; }
+        dp[d]+=cst; });
     });
     return dp;
   }
@@ -642,7 +627,7 @@
     rows.forEach(function(r){var cls=r.v<=0?"zero":((best&&r.k===best.k)?"best":"");
       html+='<tr class="'+cls+'"><td>'+((best&&r.k===best.k)?"★ ":"")+r.lab+'</td><td>'+eur(r.v)+'</td><td>'+eur(r.prod)+'</td><td>'+eur(r.per)+'</td><td>'+eur(r.c)+'</td><td>'+(r.v>0?r.pct.toFixed(0)+"%":"—")+'</td></tr>';});
     html+='<tr style="font-weight:700"><td>Total</td><td>'+eur(sum(function(r){return r.v;}))+'</td><td>'+eur(sum(function(r){return r.prod;}))+'</td><td>'+eur(sum(function(r){return r.per;}))+'</td><td>'+eur(sum(function(r){return r.c;}))+'</td><td></td></tr></table></div>';
-    if(best)html+='<div class="econreadout" style="margin-top:8px">Franja más rentable por margen de contribución: <b>'+best.lab+'</b> ('+eur(best.c)+"/mes). Nota: el coste de personal de cada franja incluye la preparación imputada (mañana→Comida, tarde→Cena).</div>";
+    if(best)html+='<div class="econreadout" style="margin-top:8px">Franja más rentable por margen de contribución: <b>'+best.lab+'</b> ('+eur(best.c)+"/mes).</div>";
     var t=$("#dpTable");if(t)t.innerHTML=html;
   }
   function kpi(l,v,s){return '<div class="kpi"><div class="lab">'+l+'</div><div class="val">'+v+'</div><div class="sub">'+(s||"")+'</div></div>';}
@@ -651,13 +636,13 @@
   function flashHint(){var b=$("#brushHint");b.textContent="Primero pincha un trabajador de la lista para elegir a quién asignas.";b.className="whint act";
     clearTimeout(hintTimer);hintTimer=setTimeout(render,1800);}
 
-  function toggleAssign(sid,wid){var a=state.assign[sid];var i=-1;for(var k=0;k<a.length;k++)if(a[k].w===wid)i=k;
-    if(i>=0)a.splice(i,1);else a.push({w:wid,h:SHIFT(sid).h});render();}
-  function unassign(sid,wid){var a=state.assign[sid];for(var k=0;k<a.length;k++)if(a[k].w===wid){a.splice(k,1);break;}render();}
-  function setHours(sid,wid,h){var s=SHIFT(sid),e=entry(sid,wid);if(!e)return;
+  function toggleAssign(sid,wid){var s=SHIFT(sid);if(!s)return;var a=state.assign[sid]||(state.assign[sid]=[]);var i=-1;for(var k=0;k<a.length;k++)if(a[k].w===wid)i=k;
+    if(i>=0)a.splice(i,1);else a.push({w:wid,h:s.h});render();}
+  function unassign(sid,wid){var a=state.assign[sid]||[];for(var k=0;k<a.length;k++)if(a[k].w===wid){a.splice(k,1);break;}render();}
+  function setHours(sid,wid,h){var s=SHIFT(sid),e=entry(sid,wid);if(!e||!s)return;
     if(isNaN(h))h=s.h; h=Math.max(0.5,Math.min(s.h,Math.round(h*2)/2)); e.h=h; render();}
   function removeW(id){state.workers=state.workers.filter(function(w){return w.id!==id;});
-    SHIFTS.forEach(function(s){state.assign[s.id]=state.assign[s.id].filter(function(e){return e.w!==id;});});
+    state.shifts.forEach(function(s){state.assign[s.id]=(state.assign[s.id]||[]).filter(function(e){return e.w!==id;});});
     if(state.brush===id)state.brush=null;render();}
   function renameWorker(id,name){var w=getW(id);if(w){w.name=name.trim()||w.name;}render();}
   function setCost(id,key,val){var w=getW(id);if(!w||isNaN(val))return;w[key]=Math.max(0,val);render();}
@@ -665,9 +650,9 @@
     state.workers.push({id:id,name:name,cat:cat,jornada:jor,rate:CATS[cat].rate,monthly:CATS[cat].monthly});return id;}
 
   function loadPreset(){
-    state.workers=[];state.brush=null;state.seq=1;state.times={};
-    SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});
-    applyTimes();
+    state.workers=[];state.brush=null;state.brushType=null;state.seq=1000;
+    state.types=defaultTypes(); state.shifts=defaultShifts(); state.assign={};
+    state.shifts.forEach(function(s){state.assign[s.id]=[];});
     var ana=addWorker("Ana López","encargado","FIJO_COMPLETO");
     var diego=addWorker("Diego Ruiz","jefe_cocina","FIJO_COMPLETO");
     var marta=addWorker("Marta Gil","extra","POR_HORAS");
@@ -681,16 +666,14 @@
       vie_md:[ana,diego], sab_md:[ana,diego],
       vie_no:[diego,marta,hugo,leo], sab_no:[diego,sofia,hugo,leo]
     };
-    Object.keys(A).forEach(function(k){var s=SHIFT(k);state.assign[k]=A[k].map(function(id){return {w:id,h:s.h};});});
+    Object.keys(A).forEach(function(k){var s=SHIFT(k);if(!s)return;state.assign[k]=A[k].map(function(id){return {w:id,h:s.h};});});
     render();
   }
-  function resetBoard(){state.workers=[];state.brush=null;state.seq=1;state.times={};
-    SHIFTS.forEach(function(s){state.assign[s.id]=[]; state.open[s.id]=(!s.prep && s.di<=5);});applyTimes();render();}
 
   // ---------- Estado <-> escenario (Supabase) ----------
   var clientId=Math.random().toString(36).slice(2)+Date.now().toString(36);
   var myName=localStorage.getItem("gs_name")||"";
-  var scenarios=[]; var chan=null; var pendingRemote=null; var joined=false; var cursors={};
+  var scenarios=[]; var pendingRemote=null; var cursors={};
   function colorFor(seed){var h=0;for(var i=0;i<seed.length;i++)h=(h*31+seed.charCodeAt(i))>>>0;return "hsl("+(h%360)+",68%,45%)";}
   var myColor=colorFor(clientId);
   function knownNames(){var set={};scenarios.forEach(function(s){if(s.creado_por)set[s.creado_por]=1;if(s.actualizado_por)set[s.actualizado_por]=1;});if(myName)delete set[myName];return Object.keys(set);}
@@ -718,22 +701,36 @@
     });
   }
 
-  function snapEstado(){return {v:5,workers:state.workers,assign:state.assign,open:state.open,times:state.times,
+  function snapEstado(){return {v:6,workers:state.workers,assign:state.assign,shifts:state.shifts,types:state.types,
     econ:state.econ,scenario:state.scenario,noct:state.noct,seq:state.seq,_c:clientId,_by:myName};}
+  function normType(t){ if(!t)return null; var st=+t.st,en=+t.en; if(isNaN(st)||isNaN(en))return null; if(en<=st)en+=24;
+    return {t:String(t.t||("tp"+(state.seq++))),fr:String(t.fr||"Franja").slice(0,24),kind:t.kind==="prep"?"prep":"servicio",
+      dp:DPKEYS.indexOf(t.dp)>=0?t.dp:"comida",st:st,en:en,need:Math.max(1,parseInt(t.need,10)||1)}; }
+  function normInst(s){ if(!s||s.di==null)return null; var st=+s.st,en=+s.en; if(isNaN(st)||isNaN(en))return null; if(en<=st)en+=24;
+    return {id:String(s.id||("s"+(state.seq++))),di:+s.di,fr:String(s.fr||"Franja").slice(0,24),kind:s.kind==="prep"?"prep":"servicio",
+      dp:DPKEYS.indexOf(s.dp)>=0?s.dp:"comida",st:st,en:en,h:round1(en-st),need:Math.max(1,parseInt(s.need,10)||1)}; }
+  function migrateOld(o){ var ids={},out=[];
+    if(o.open)Object.keys(o.open).forEach(function(k){if(o.open[k])ids[k]=1;});
+    if(o.assign)Object.keys(o.assign).forEach(function(k){if((o.assign[k]||[]).length)ids[k]=1;});
+    Object.keys(ids).forEach(function(id){var d=oldDef(id);if(!d)return;var di=DAYID.indexOf(id.split("_")[0]);if(di<0)return;
+      var t=(o.times&&o.times[id])||{}; var st=(typeof t.st==="number")?t.st:d.st, en=(typeof t.en==="number")?t.en:d.en; if(en<=st)en+=24;
+      out.push(mkInst(id,di,d.fr,d.kind,d.dp,st,en,d.need));});
+    return out.length?out:defaultShifts();
+  }
   function applyEstado(o){
     if(!o)return;
     state.workers=Array.isArray(o.workers)?o.workers:[];
     state.scenario=SCEN[o.scenario]?o.scenario:"base";
-    var e=o.econ||{}; var dp=e.dp||{}; state.econ={bajo:+e.bajo||15574,base:+e.base||28013,alto:+e.alto||44125,margen:(e.margen!=null&&!isNaN(+e.margen)?+e.margen:0.687),opex:(e.opex!=null&&!isNaN(+e.opex)?+e.opex:5220),
+    var e=o.econ||{}; var dp=e.dp||{}; state.econ={bajo:+e.bajo||15574,base:+e.base||28013,alto:+e.alto||44125,
+      margen:(e.margen!=null&&!isNaN(+e.margen)?+e.margen:0.687),opex:(e.opex!=null&&!isNaN(+e.opex)?+e.opex:5220),
       dp:{desayuno:+dp.desayuno||0,comida:(dp.comida!=null&&!isNaN(+dp.comida)?+dp.comida:15000),tardeo:+dp.tardeo||0,cena:(dp.cena!=null&&!isNaN(+dp.cena)?+dp.cena:13013)}};
-    state.noct=o.noct!==false; state.seq=o.seq||(state.workers.length+1);
-    state.times={}; if(o.times)Object.keys(o.times).forEach(function(k){var t=o.times[k];if(t&&typeof t.st==="number"&&typeof t.en==="number")state.times[k]={st:t.st,en:t.en};});
-    SHIFTS.forEach(function(s){
-      state.open[s.id]=(o.open&&typeof o.open[s.id]==="boolean")?o.open[s.id]:(!s.prep&&s.di<=5);
-      var prev=(o.assign&&o.assign[s.id])||[];
-      state.assign[s.id]=prev.filter(function(e){return e&&state.workers.some(function(w){return w.id===e.w;});}).map(function(e){return {w:e.w,h:e.h||s.h};});
-    });
-    applyTimes();
+    state.noct=o.noct!==false; state.seq=(o.seq&&o.seq>1000)?o.seq:1000;
+    state.types=(Array.isArray(o.types)&&o.types.length)?o.types.map(normType).filter(Boolean):defaultTypes();
+    state.shifts=Array.isArray(o.shifts)?o.shifts.map(normInst).filter(Boolean):migrateOld(o);
+    if(!state.shifts.length)state.shifts=defaultShifts();
+    state.assign={};
+    state.shifts.forEach(function(s){ var prev=(o.assign&&o.assign[s.id])||[];
+      state.assign[s.id]=prev.filter(function(x){return x&&state.workers.some(function(w){return w.id===x.w;});}).map(function(x){return {w:x.w,h:Math.max(0.5,Math.min(s.h,x.h||s.h))};}); });
   }
   function setStatus(t){var e=$("#saveStatus");if(e)e.textContent=t;}
   var syncTimer=null;
@@ -777,11 +774,8 @@
   }
   function renderPresence(names){ var e=$("#presence"); if(!e)return; e.innerHTML="";
     var uniq=[]; names.forEach(function(n){if(uniq.indexOf(n)<0)uniq.push(n);});
-    var cnt=document.createElement("span");cnt.className="pcount";cnt.textContent="👥 "+uniq.length+(uniq.length===1?" en el escenario":" en el escenario");e.appendChild(cnt);
+    var cnt=document.createElement("span");cnt.className="pcount";cnt.textContent="👥 "+uniq.length+" en el escenario";e.appendChild(cnt);
     uniq.forEach(function(n){var s=document.createElement("span");s.className="pchip"+(n===myName?" me":"");s.textContent=n||"—";e.appendChild(s);});
-  }
-  function ensureName(){ if(!myName){ myName=(prompt("¿Cómo te llamas? (para la sala compartida)","")||"Invitado").slice(0,24); localStorage.setItem("gs_name",myName); }
-    var nb=$("#nameBtn"); if(nb)nb.textContent="👤 "+myName;
   }
   var listChan=null, roomChan=null, roomJoined=false;
   function subscribeList(){ if(!sb||listChan)return;
@@ -859,10 +853,10 @@
     rows.push([]);
     rows.push(["PARRILLA DE TURNOS"]);
     rows.push(["Día","Franja","Tipo","Horario","Personas req.","Personas asign.","Horas franja","Equipo asignado (horas de cada uno)"]);
-    SHIFTS.forEach(function(s){ if(!active(s))return;
+    state.shifts.slice().sort(function(a,b){return a.di-b.di||a.st-b.st;}).forEach(function(s){
       var time=fmt(s.st)+"-"+fmt(s.en);
-      var team=state.assign[s.id].map(function(e){var w=getW(e.w);return w?(w.name+" ("+e.h+"h)"):"";}).filter(Boolean).join(" · ");
-      rows.push([DAYS[s.di],s.fr+(s.peak?" (PICO)":""),s.prep?"Preparación (cerrado)":"Servicio",time,s.need,state.assign[s.id].length,s.h,team]);
+      var team=(state.assign[s.id]||[]).map(function(e){var w=getW(e.w);return w?(w.name+" ("+e.h+"h)"):"";}).filter(Boolean).join(" · ");
+      rows.push([DAYS[s.di],s.fr,s.kind==="prep"?"Preparación (cerrado)":"Servicio",time,s.need,(state.assign[s.id]||[]).length,s.h,team]);
     });
     rows.push([]);
     rows.push(["PLANTILLA"]);
@@ -877,7 +871,6 @@
     rows.push(["Horas fijas / por horas (sem)",c.fijoH+" / "+c.varH]);
     rows.push(["Cobertura del servicio",Math.round(c.cobertura*100)+" %"]);
     rows.push(["EBITDA estimado (€/mes)",Math.round(c.ebitda)]);
-    rows.push(["Puntuación",c.score+"/100"]);
     var csv=rows.map(function(r){return r.map(q).join(";");}).join("\r\n");
     var name="Gran_Sol_horario_"+state.scenario+".csv";
     try{var blob=new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8;"});
@@ -889,7 +882,7 @@
   }
 
   // ---- Boot ----
-  loadPreset(); // pinta algo mientras conecta
+  loadPreset();
   function afterName(){
     if(!sb){ setStatus("sin conexión (modo local)"); render(); return; }
     setStatus("conectando…");
@@ -908,3 +901,5 @@
   else showGate(afterName);
 })();
 </script>
+</body>
+</html>
